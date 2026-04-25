@@ -15,6 +15,7 @@ jobs:
       - name: Lint markdown files
         uses: DavidAnson/markdownlint-cli2-action@v15
         with:
+          config: '.markdownlint.json'
           globs: |
             **/*.md
             !node_modules
@@ -30,10 +31,8 @@ jobs:
           set -e
           fail=0
           for f in $(find rfcs templates -name '*.md'); do
-            # Extract relative-path links of the form ](path/to/file)
             links=$(grep -oP '\]\(\K[^)]+' "$f" | grep -E '^\.\.?/' || true)
             for link in $links; do
-              # Resolve the target path
               dir=$(dirname "$f")
               target="$(realpath -m "$dir/$link" 2>/dev/null || echo "$dir/$link")"
               if [ ! -e "$target" ]; then
@@ -54,25 +53,22 @@ jobs:
           set -e
           fail=0
           for f in $(find rfcs -name '*.md' | grep -v 0000-template); do
-            # Verify frontmatter exists
             if ! head -1 "$f" | grep -q '^---$'; then
               echo "::error file=$f::Missing frontmatter (must start with ---)"
               fail=1
               continue
             fi
-            # Required fields
             for field in rfc title status track authors created updated; do
               if ! grep -q "^$field:" "$f"; then
                 echo "::error file=$f::Missing required frontmatter field: $field"
                 fail=1
               fi
             done
-            # Status must be one of: draft, review, active, final, superseded, withdrawn
             status=$(grep '^status:' "$f" | head -1 | awk '{print $2}')
             case "$status" in
               draft|review|active|final|superseded|withdrawn) ;;
               *)
-                echo "::error file=$f::Invalid status: $status (must be draft/review/active/final/superseded/withdrawn)"
+                echo "::error file=$f::Invalid status: $status"
                 fail=1
                 ;;
             esac

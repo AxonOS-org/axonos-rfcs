@@ -1,0 +1,97 @@
+name: RFC Validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  markdown-lint:
+    name: Markdown lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint markdown files
+        uses: DavidAnson/markdownlint-cli2-action@v15
+        with:
+          globs: |
+            **/*.md
+            !node_modules
+        continue-on-error: false
+
+  link-check:
+    name: Broken link check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check internal links in RFCs
+        run: |
+          set -e
+          fail=0
+          for f in $(find rfcs templates -name '*.md'); do
+            # Extract relative-path links of the form ](path/to/file)
+            links=$(grep -oP '\]\(\K[^)]+' "$f" | grep -E '^\.\.?/' || true)
+            for link in $links; do
+              # Resolve the target path
+              dir=$(dirname "$f")
+              target="$(realpath -m "$dir/$link" 2>/dev/null || echo "$dir/$link")"
+              if [ ! -e "$target" ]; then
+                echo "::error file=$f::Broken relative link: $link (resolved to $target)"
+                fail=1
+              fi
+            done
+          done
+          exit $fail
+
+  rfc-frontmatter-check:
+    name: RFC frontmatter validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate RFC frontmatter
+        run: |
+          set -e
+          fail=0
+          for f in $(find rfcs -name '*.md' | grep -v 0000-template); do
+            # Verify frontmatter exists
+            if ! head -1 "$f" | grep -q '^---$'; then
+              echo "::error file=$f::Missing frontmatter (must start with ---)"
+              fail=1
+              continue
+            fi
+            # Required fields
+            for field in rfc title status track authors created updated; do
+              if ! grep -q "^$field:" "$f"; then
+                echo "::error file=$f::Missing required frontmatter field: $field"
+                fail=1
+              fi
+            done
+            # Status must be one of: draft, review, active, final, superseded, withdrawn
+            status=$(grep '^status:' "$f" | head -1 | awk '{print $2}')
+            case "$status" in
+              draft|review|active|final|superseded|withdrawn) ;;
+              *)
+                echo "::error file=$f::Invalid status: $status (must be draft/review/active/final/superseded/withdrawn)"
+                fail=1
+                ;;
+            esac
+          done
+          exit $fail
+
+  validation-level-check:
+    name: Validation evidence level present
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check every RFC has a Validation evidence level section
+        run: |
+          set -e
+          fail=0
+          for f in $(find rfcs -name '*.md' | grep -v 0000-template); do
+            if ! grep -q '^## Validation evidence level' "$f"; then
+              echo "::error file=$f::Missing 'Validation evidence level' section (required by RFC-0003)"
+              fail=1
+            fi
+          done
+          exit $fail

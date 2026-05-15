@@ -15,7 +15,7 @@ The AxonOS RFC ("Request for Comments") process is how substantial architectural
 [![Medium](https://img.shields.io/badge/Medium-02b875?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/@AxonOS)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/axonos)
 [![dev.to](https://img.shields.io/badge/dev.to-0A0A0A?style=for-the-badge&logo=devdotto&logoColor=white)](https://dev.to/axonosorg)
-[![Email](https://img.shields.io/badge/axonosorg%40gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:axonosorg@gmail.com)
+[![Email](https://img.shields.io/badge/info%40axonos.org-0E2A47?style=for-the-badge&logo=maildotru&logoColor=white)](mailto:info@axonos.org)
 
 </div>
 
@@ -158,7 +158,7 @@ The `axonos-consent` Rust source code, referenced from several RFCs as the canon
 ## Contact
 
 Denis Yermakou, founder.
-**axonosorg@gmail.com**
+**info@axonos.org**
 
 For substantive RFC discussion, please use [GitHub Discussions](../../discussions) rather than email — public technical record is the point.
 

@@ -4,7 +4,7 @@ title: Intent Wire Format ABI
 status: draft
 track: api
 authors:
-  - Denis Yermakou <axonosorg@gmail.com>
+  - Denis Yermakou <info@axonos.org>
 created: 2026-05-15
 updated: 2026-05-15
 implementation:

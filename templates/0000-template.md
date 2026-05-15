@@ -4,7 +4,7 @@ title: <Short descriptive title>
 status: draft
 track: <scheduling | memory | security | process | hardware | api>
 authors:
-  - Denis Yermakou <axonosorg@gmail.com>
+  - Denis Yermakou <info@axonos.org>
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 implementation:

@@ -98,4 +98,4 @@ For substantive contributions (anything more than a typo fix), please add yourse
 
 ## Contact
 
-For matters that don't fit the public-record process: **axonosorg@gmail.com**.
+For matters that don't fit the public-record process: **info@axonos.org**.

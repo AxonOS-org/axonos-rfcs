@@ -4,7 +4,7 @@ title: EDF Scheduler with Biological Deadlines
 status: active
 track: scheduling
 authors:
-  - Denis Yermakou <axonosorg@gmail.com>
+  - Denis Yermakou <info@axonos.org>
 created: 2026-04-25
 updated: 2026-04-25
 implementation:

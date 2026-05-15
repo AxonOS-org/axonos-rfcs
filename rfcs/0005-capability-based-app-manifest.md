@@ -4,7 +4,7 @@ title: Capability-Based Application Manifest
 status: active
 track: security
 authors:
-  - Denis Yermakou <axonosorg@gmail.com>
+  - Denis Yermakou <info@axonos.org>
 created: 2026-04-25
 updated: 2026-04-25
 implementation:

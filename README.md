@@ -6,7 +6,7 @@
 
 The AxonOS RFC ("Request for Comments") process is how substantial architectural decisions are designed, reviewed, and recorded. Each RFC captures the reasoning, alternatives, formal model, and acceptance criteria for one design decision in the AxonOS kernel.
 
-[![RFCs](https://img.shields.io/badge/RFCs-5-blueviolet?style=for-the-badge)](rfcs/)
+[![RFCs](https://img.shields.io/badge/RFCs-6-blueviolet?style=for-the-badge)](rfcs/)
 [![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-green?style=for-the-badge)](LICENSE)
 [![Status](https://img.shields.io/badge/process-active-success?style=for-the-badge)](#process)
 [![Discussions](https://img.shields.io/badge/discussions-open-informational?style=for-the-badge&logo=github)](../../discussions)
@@ -40,6 +40,7 @@ The format is adapted from the [Rust RFC process](https://github.com/rust-lang/r
 | [0003](rfcs/0003-validation-status-framework.md) | Validation Status Framework (L1/L2/L3) | ![status-active](https://img.shields.io/badge/-active-success) | process | 2026-04-25 |
 | [0004](rfcs/0004-dual-core-real-time-contract.md) | Dual-Core Real-Time Contract | ![status-active](https://img.shields.io/badge/-active-success) | scheduling | 2026-04-25 |
 | [0005](rfcs/0005-capability-based-app-manifest.md) | Capability-Based Application Manifest | ![status-active](https://img.shields.io/badge/-active-success) | security | 2026-04-25 |
+| [0006](rfcs/0006-intent-wire-format-abi.md) | Intent Wire Format ABI | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | api | 2026-05-15 |
 
 ### Status legend
 

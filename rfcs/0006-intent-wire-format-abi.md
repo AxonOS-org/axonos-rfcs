@@ -8,8 +8,8 @@ authors:
 created: 2026-05-15
 updated: 2026-05-15
 implementation:
-  - axonos-sdk v0.4.0 IntentObservation (32-byte, repr(C, align(8))) — shipping
-  - axonos-consent v0.4.0 — shipping
+  - axonos-sdk — IntentObservation (32-byte, repr(C, align(8))) — current release
+  - axonos-consent — current release
   - Promotion to active pending Q2 2026 L3 validation per RFC-0003
 references:
   - RFC 2119 — Key words for use in RFCs to Indicate Requirement Levels (IETF, 1997)
@@ -77,7 +77,7 @@ Total  32 bytes, 8-byte aligned
 
 ### Field semantics
 
-**`timestamp_us` (u64, offset 0).** Microseconds since session start, as defined by the `MonotonicTimestamp` type in `axonos-sdk`. Within a session, this value MUST NOT decrease. Values MUST NOT exceed $\mathrm{SESSION\_MAX\_REASONABLE\_US} = 2^{48}$ (defined in `axonos-sdk` v0.4.0 — approximately 8.9 years at 1 µs resolution). Receivers MUST reject any record with a timestamp exceeding this bound. The bound prevents adversarial inputs from corrupting downstream arithmetic.
+**`timestamp_us` (u64, offset 0).** Microseconds since session start, as defined by the `MonotonicTimestamp` type in `axonos-sdk`. Within a session, this value MUST NOT decrease. Values MUST NOT exceed $\mathrm{SESSION\_MAX\_REASONABLE\_US} = 2^{48}$ (defined in `axonos-sdk` — approximately 8.9 years at 1 µs resolution). Receivers MUST reject any record with a timestamp exceeding this bound. The bound prevents adversarial inputs from corrupting downstream arithmetic.
 
 **`kind_tag` (u8, offset 8).** Discriminant for the observation kind:
 
@@ -129,7 +129,7 @@ The HMAC key is derived per-session via HKDF-SHA256 (RFC 5869) from a device-uni
 
 ### Versioning rules
 
-ABI versions follow Semantic Versioning. The current ABI version is **`0.4.0` (draft)**. The version is announced at subscription handshake as three `u8` fields (major, minor, patch). Consumers MUST refuse to subscribe if the kernel's major version does not match the consumer's compiled-in expectation.
+ABI versions follow Semantic Versioning. The ABI is currently in **draft** status. The version is announced at subscription handshake as three `u8` fields (major, minor, patch). Consumers MUST refuse to subscribe if the kernel's major version does not match the consumer's compiled-in expectation.
 
 Permitted changes by version step:
 
@@ -155,7 +155,7 @@ This RFC will be promoted from **draft** to **active** when, and only when, all 
 2. At least two independent implementations have demonstrated interoperability against the conformance test vectors maintained in this repository.
 3. A six-month public review window has elapsed since publication of the draft.
 
-Until promotion, the format is the working specification implemented by `axonos-sdk` v0.4.0 and `axonos-consent` v0.4.0. Breaking changes during the draft period require a new minor or major version bump per § Versioning rules; the format does not regress silently.
+Until promotion, the format is the working specification implemented by `axonos-sdk` and `axonos-consent`. Breaking changes during the draft period require a new minor or major version bump per § Versioning rules; the format does not regress silently.
 
 ## Drawbacks
 
@@ -198,12 +198,12 @@ The capability bitfield design with reserved bits and explicit non-renumbering i
 ## Unresolved questions
 
 1. **Conformance test vector format.** The vectors will live under `vectors/rfc-0006/` in this repository. The exact encoding (raw binary, hex with comments, or both) is under discussion; the working assumption is "both, in parallel directories." Decision before promotion to active.
-2. **HKDF salt source.** The current `axonos-consent` v0.4.0 implementation uses a fixed salt; whether to derive the salt from the session ID instead is open. Decision before promotion to active.
+2. **HKDF salt source.** The current `axonos-consent` implementation uses a fixed salt; whether to derive the salt from the session ID instead is open. Decision before promotion to active.
 3. **Confidence range adjustment.** Whether to extend `confidence_q0_16` to Q1.15 signed in a future minor revision (allowing negative confidence as a signal-quality indicator) is deferred to RFC-0008 or later, not committed.
 
 ## Future possibilities
 
-A second wire-format RFC could specify the consent channel's per-message format (currently CBOR-encoded under `axonos-consent` v0.4.0) with the same level of normative detail. This would put the AxonOS Consent Protocol on equally portable footing.
+A second wire-format RFC could specify the consent channel's per-message format (currently CBOR-encoded under `axonos-consent`) with the same level of normative detail. This would put the AxonOS Consent Protocol on equally portable footing.
 
 A capability-payload RFC could specify how a future capability with a richer payload (e.g., a 12-byte velocity vector for a hypothetical continuous-control capability) would consume the `reserved` field block, including the version bump rules and the consumer-side parsing requirements.
 
@@ -213,8 +213,8 @@ The same wire-format discipline could be applied to the `axonos-swarm` peer-to-p
 
 Per RFC-0003, the claims in this RFC stand at the following levels:
 
-- **Wire format size and alignment** — L1. Compile-time assertions in `axonos-sdk` v0.4.0 enforce `size_of::<IntentObservation>() == 32` and `align_of::<IntentObservation>() == 8`. The assertions are evaluated at build time on every CI run.
-- **Decoder rejection of malformed records** — L2. Unit tests in `axonos-sdk` v0.4.0 cover the malformed-vector cases; runtime measurement on the reference platform is in progress as part of Phase 1.
+- **Wire format size and alignment** — L1. Compile-time assertions in `axonos-sdk` enforce `size_of::<IntentObservation>() == 32` and `align_of::<IntentObservation>() == 8`. The assertions are evaluated at build time on every CI run.
+- **Decoder rejection of malformed records** — L2. Unit tests in `axonos-sdk` cover the malformed-vector cases; runtime measurement on the reference platform is in progress as part of Phase 1.
 - **HMAC verification correctness** — L1. The HMAC-SHA256 construction is delegated to a verified primitive; the truncation and key derivation are specified by reference to RFC 2104 / RFC 5869 / RFC 6234 and verified by test vectors against those RFCs.
 - **End-to-end WCRT under this wire format** — pending L3 oscilloscope validation per RFC-0003 (target Q2 2026).
 

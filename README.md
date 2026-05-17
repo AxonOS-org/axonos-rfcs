@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="https://rustacean.net/assets/rustacean-flat-happy.svg" width="100" alt="Ferris, the Rust mascot" />
+
 # AxonOS RFCs
 
 ### Engineering design documents for the AxonOS real-time BCI kernel
@@ -15,7 +17,7 @@ The AxonOS RFC ("Request for Comments") process is how substantial architectural
 [![Medium](https://img.shields.io/badge/Medium-02b875?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/@AxonOS)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/axonos)
 [![dev.to](https://img.shields.io/badge/dev.to-0A0A0A?style=for-the-badge&logo=devdotto&logoColor=white)](https://dev.to/axonosorg)
-[![Email](https://img.shields.io/badge/info%40axonos.org-0E2A47?style=for-the-badge&logo=maildotru&logoColor=white)](mailto:info@axonos.org)
+[![Kernel](https://img.shields.io/badge/axonos--kernel-0E2A47?style=for-the-badge&logo=github&logoColor=white)](https://github.com/AxonOS-org/AxonOS-kernel)
 
 </div>
 
@@ -157,13 +159,22 @@ The `axonos-consent` Rust source code, referenced from several RFCs as the canon
 
 ## Contact
 
-Denis Yermakou, founder.
-**info@axonos.org**
+- **General correspondence:** [info@axonos.org](mailto:info@axonos.org)
+- **Partnership and clinical engagement:** [connect@axonos.org](mailto:connect@axonos.org)
+- **Security disclosures:** [security@axonos.org](mailto:security@axonos.org)
 
 For substantive RFC discussion, please use [GitHub Discussions](../../discussions) rather than email — public technical record is the point.
 
 ---
 
 <div align="center">
-<sub>© 2026 Denis Yermakou · AxonOS · The RFC process is how the kernel earns the right to be called real-time.</sub>
+
+**Author and maintainer:** Denis Yermakou · [denis@axonos.org](mailto:denis@axonos.org)
+
+[axonos.org](https://axonos.org) · [medium.com/@AxonOS](https://medium.com/@AxonOS) · [github.com/AxonOS-org](https://github.com/AxonOS-org)
+
+Zurich · Berlin · Milano · San Mateo · Singapore
+
+<sub>The RFC process is how the kernel earns the right to be called real-time.</sub>
+
 </div>

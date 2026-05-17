@@ -1,0 +1,59 @@
+AxonOS Engineering RFCs
+Copyright (c) 2026 Denis Yermakou <denis@axonos.org>
+
+The contents of this repository are licensed under the Creative Commons
+Attribution-ShareAlike 4.0 International License (CC-BY-SA-4.0).
+
+────────────────────────────────────────────────────────────────────
+ATTRIBUTION REQUIREMENT (CC-BY-SA-4.0)
+────────────────────────────────────────────────────────────────────
+
+If You distribute, adapt, translate, or build upon these RFCs, You
+must:
+
+  1. Give appropriate credit to Denis Yermakou and the AxonOS project.
+  2. Provide a link to the licence (https://creativecommons.org/licenses/by-sa/4.0/).
+  3. Indicate if changes were made.
+  4. Distribute Your contributions under the same CC-BY-SA-4.0 licence
+     ("share-alike" clause).
+
+Suggested attribution string:
+
+    Based on AxonOS RFC-NNNN by Denis Yermakou, licensed under
+    CC-BY-SA-4.0. https://github.com/AxonOS-org/axonos-rfcs
+
+────────────────────────────────────────────────────────────────────
+TRADEMARK
+────────────────────────────────────────────────────────────────────
+
+"AxonOS" is an unregistered word mark of Denis Yermakou. Permission
+is granted to use the name to refer to the project, its documentation,
+and unmodified releases. Derivative RFC processes should choose a
+distinct name to avoid confusion; you may state your process is
+"based on the AxonOS RFC process" as a factual descriptor.
+
+────────────────────────────────────────────────────────────────────
+SCOPE OF THIS LICENCE
+────────────────────────────────────────────────────────────────────
+
+This CC-BY-SA-4.0 licence applies ONLY to the RFC documents in this
+repository. The source code referenced from these RFCs lives in
+separate repositories under different licences:
+
+  axonos-kernel    Apache-2.0 OR MIT
+  axonos-sdk       Apache-2.0 OR MIT
+  axonos-consent   Apache-2.0 OR MIT
+  axonos-swarm     Apache-2.0 OR MIT
+
+Different artifacts, different licences. When in doubt, consult the
+LICENSE file in the relevant repository.
+
+────────────────────────────────────────────────────────────────────
+CONTACT
+────────────────────────────────────────────────────────────────────
+
+Author:                Denis Yermakou
+Primary email:         denis@axonos.org
+Project website:       https://axonos.org
+Source repositories:   https://github.com/AxonOS-org
+RFC discussion:        https://github.com/AxonOS-org/axonos-rfcs/discussions

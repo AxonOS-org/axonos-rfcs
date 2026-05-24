@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+title: "AxonOS RFCs"
+message: >-
+  If you reference or build against this component of the AxonOS
+  project, please cite it using the metadata below. The canonical
+  specification is the axonos-standard repository.
+type: software
+authors:
+  - given-names: Denis
+    family-names: Yermakou
+    affiliation: "AxonOS Project"
+repository-code: "https://github.com/AxonOS-org/axonos-rfcs"
+url: "https://axonos.org"
+abstract: >-
+  Proposals, design documents, and architectural decision records for the AxonOS project. RFCs become normative once finalised and are tracked against the canonical standard.
+keywords:
+  - brain-computer interface
+  - real-time systems
+  - operating system
+  - neurotechnology
+  - rust
+license: CC-BY-SA-4.0

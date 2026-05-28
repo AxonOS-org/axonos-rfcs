@@ -4,7 +4,7 @@ title: Dual-Core Real-Time Contract
 status: active
 track: scheduling
 authors:
-  - Denis Yermakou <info@axonos.org>
+  - Denis Yermakou <connect@axonos.org>
 created: 2026-04-25
 updated: 2026-04-25
 implementation:

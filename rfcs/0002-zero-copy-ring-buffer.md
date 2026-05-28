@@ -4,7 +4,7 @@ title: Zero-Copy Ring Buffer for Signal Path
 status: active
 track: memory
 authors:
-  - Denis Yermakou <info@axonos.org>
+  - Denis Yermakou <connect@axonos.org>
 created: 2026-04-25
 updated: 2026-04-25
 implementation:

@@ -1,0 +1,13 @@
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Rendered output, if any RFC is ever exported locally
+*.pdf
+*.html
+/_site/

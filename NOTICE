@@ -1,5 +1,5 @@
 AxonOS Engineering RFCs
-Copyright (c) 2026 Denis Yermakou <denis@axonos.org>
+Copyright (c) 2026 Denis Yermakou <connect@axonos.org>
 
 The contents of this repository are licensed under the Creative Commons
 Attribution-ShareAlike 4.0 International License (CC-BY-SA-4.0).
@@ -53,7 +53,7 @@ CONTACT
 ────────────────────────────────────────────────────────────────────
 
 Author:                Denis Yermakou
-Primary email:         denis@axonos.org
+Primary email:         connect@axonos.org
 Project website:       https://axonos.org
 Source repositories:   https://github.com/AxonOS-org
 RFC discussion:        https://github.com/AxonOS-org/axonos-rfcs/discussions

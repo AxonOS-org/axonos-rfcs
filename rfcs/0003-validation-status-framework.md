@@ -4,7 +4,7 @@ title: Validation Status Framework (L1/L2/L3)
 status: active
 track: process
 authors:
-  - Denis Yermakou <info@axonos.org>
+  - Denis Yermakou <connect@axonos.org>
 created: 2026-04-25
 updated: 2026-04-25
 implementation:

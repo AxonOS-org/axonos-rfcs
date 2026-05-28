@@ -1,23 +1,20 @@
 <div align="center">
 
-<img src="https://rustacean.net/assets/rustacean-flat-happy.svg" width="100" alt="Ferris, the Rust mascot" />
-
 # AxonOS RFCs
 
-### Engineering design documents for the AxonOS real-time BCI kernel
+### Engineering design documents for the AxonOS real-time BCI kernel.
 
-The AxonOS RFC ("Request for Comments") process is how substantial architectural decisions are designed, reviewed, and recorded. Each RFC captures the reasoning, alternatives, formal model, and acceptance criteria for one design decision in the AxonOS kernel.
+<sub>Each RFC records the reasoning, alternatives, formal model, and acceptance criteria for one architectural decision.</sub>
 
-[![RFCs](https://img.shields.io/badge/RFCs-6-blueviolet?style=for-the-badge)](rfcs/)
-[![License](https://img.shields.io/badge/license-CC--BY--SA--4.0-green?style=for-the-badge)](LICENSE)
-[![Status](https://img.shields.io/badge/process-active-success?style=for-the-badge)](#process)
-[![Discussions](https://img.shields.io/badge/discussions-open-informational?style=for-the-badge&logo=github)](../../discussions)
+<br/>
 
-[![Website](https://img.shields.io/badge/axonos.org-000000?style=for-the-badge&logoColor=white)](https://axonos.org)
-[![Medium](https://img.shields.io/badge/Medium-02b875?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/@AxonOS)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/axonos)
-[![dev.to](https://img.shields.io/badge/dev.to-0A0A0A?style=for-the-badge&logo=devdotto&logoColor=white)](https://dev.to/axonosorg)
-[![Kernel](https://img.shields.io/badge/axonos--kernel-0E2A47?style=for-the-badge&logo=github&logoColor=white)](https://github.com/AxonOS-org/AxonOS-kernel)
+[![RFCs](https://img.shields.io/badge/RFCs-6-0a4a8f?style=flat-square)](rfcs/)
+[![Standard](https://img.shields.io/badge/Standard-v1.0.0-0a4a8f?style=flat-square)](https://github.com/AxonOS-org/axonos-standard)
+[![Process](https://img.shields.io/badge/Process-active-0d7a5f?style=flat-square)](#process)
+[![License](https://img.shields.io/badge/License-CC--BY--SA--4.0-475569?style=flat-square)](LICENSE)
+[![Discussions](https://img.shields.io/badge/Discussions-open-475569?style=flat-square&logo=github&logoColor=white)](../../discussions)
+
+[**Index**](#index-of-rfcs) &nbsp;·&nbsp; [**Process**](#process) &nbsp;·&nbsp; [**Reading order**](#reading-order-for-new-readers) &nbsp;·&nbsp; [**Stack**](#position-in-the-axonos-stack) &nbsp;·&nbsp; [**License**](#license)
 
 </div>
 
@@ -143,6 +140,27 @@ If you are an investor evaluating engineering rigour:
 
 ---
 
+## Position in the AxonOS stack
+
+These RFCs are the engineering record behind the canonical
+[`axonos-standard`](https://github.com/AxonOS-org/axonos-standard). An RFC
+becomes normative once finalised and folded into the Standard.
+
+| Layer | Repository | Role |
+|---|---|---|
+| Canonical standard | [`axonos-standard`](https://github.com/AxonOS-org/axonos-standard) | Architecture manual, conformance criteria, validation taxonomy |
+| **Engineering RFCs** | **`axonos-rfcs`** | Numbered design proposals (this repository); normative once finalised |
+| Kernel substrate | [`axonos-kernel`](https://github.com/AxonOS-org/axonos-kernel) | EDF scheduling, SPSC IPC, capability gate, monotonic time |
+| Application boundary | [`axonos-sdk`](https://github.com/AxonOS-org/axonos-sdk) | Typed intents, manifests, ABI-compatible integration |
+| Consent layer | [`axonos-consent`](https://github.com/AxonOS-org/axonos-consent) | Deterministic consent state machine and stimulation-gating protocol |
+| Mesh coordination | [`axonos-swarm`](https://github.com/AxonOS-org/axonos-swarm) | Distributed timing, co-availability, peer health monitoring |
+| Acquisition gateway | [`axon-bci-gateway`](https://github.com/AxonOS-org/axon-bci-gateway) | OpenBCI GUI integration fork for EEG input |
+
+Each RFC's reference-level section maps to an implementation in one of the
+code repositories above.
+
+---
+
 ## License
 
 The contents of this repository — including all RFC documents — are licensed under the [Creative Commons Attribution-ShareAlike 4.0 International License (CC-BY-SA-4.0)](LICENSE).
@@ -159,8 +177,7 @@ The `axonos-consent` Rust source code, referenced from several RFCs as the canon
 
 ## Contact
 
-- **General correspondence:** [info@axonos.org](mailto:info@axonos.org)
-- **Partnership and clinical engagement:** [connect@axonos.org](mailto:connect@axonos.org)
+- **General, partnership, and clinical engagement:** [connect@axonos.org](mailto:connect@axonos.org)
 - **Security disclosures:** [security@axonos.org](mailto:security@axonos.org)
 
 For substantive RFC discussion, please use [GitHub Discussions](../../discussions) rather than email — public technical record is the point.
@@ -169,11 +186,11 @@ For substantive RFC discussion, please use [GitHub Discussions](../../discussion
 
 <div align="center">
 
-**Author and maintainer:** Denis Yermakou · [denis@axonos.org](mailto:denis@axonos.org)
+**The AxonOS Project** &nbsp;·&nbsp; [axonos.org](https://axonos.org) &nbsp;·&nbsp; [connect@axonos.org](mailto:connect@axonos.org) &nbsp;·&nbsp; [security@axonos.org](mailto:security@axonos.org)
 
-[axonos.org](https://axonos.org) · [medium.com/@AxonOS](https://medium.com/@AxonOS) · [github.com/AxonOS-org](https://github.com/AxonOS-org)
+[medium.com/@AxonOS](https://medium.com/@AxonOS) &nbsp;·&nbsp; [github.com/AxonOS-org](https://github.com/AxonOS-org)
 
-Zurich · Berlin · Milano · San Mateo · Singapore
+<sub>Singapore · Zurich · Berlin · Milano · San Mateo</sub>
 
 <sub>The RFC process is how the kernel earns the right to be called real-time.</sub>
 

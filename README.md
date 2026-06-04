@@ -40,6 +40,7 @@ The format is adapted from the [Rust RFC process](https://github.com/rust-lang/r
 | [0004](rfcs/0004-dual-core-real-time-contract.md) | Dual-Core Real-Time Contract | ![status-active](https://img.shields.io/badge/-active-success) | scheduling | 2026-04-25 |
 | [0005](rfcs/0005-capability-based-app-manifest.md) | Capability-Based Application Manifest | ![status-active](https://img.shields.io/badge/-active-success) | security | 2026-04-25 |
 | [0006](rfcs/0006-intent-wire-format-abi.md) | Intent Wire Format ABI | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | api | 2026-05-15 |
+| [0007](rfcs/0007-swarm-real-time-contract.md) | Swarm Real-Time Contract | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | scheduling | 2026-06-04 |
 
 ### Status legend
 

@@ -8,7 +8,7 @@ authors:
 created: 2026-07-29
 updated: 2026-07-29
 implementation:
-  - axonos-hal — TimingBudget::close — v0.1.1, partially conformant (see §9)
+  - axonos-hal — TimingBudget::close — v0.2.0 adopts the published figures; v0.1.1 deviations recorded in §9
   - axonos-supervisor — deadline-miss observability — v0.1.0
   - Promotion to active pending L3 oscilloscope validation per RFC-0003
 references:
@@ -183,10 +183,47 @@ the coverage argument and the safety factor applied, or explicitly state that
 none was applied.
 
 **W3.** A utilisation ceiling below 100 % is **not** a schedulability criterion
-for this model. Under M2 the exact test is (1). A ceiling such as the reference
-implementation's 80 % is a *robustness margin against W2* — against the
-possibility that *C* is underestimated — and MUST be documented as such rather
-than presented as a scheduling result.
+for this model. Under M2 the exact test is (1). A ceiling is a *robustness
+margin against W2* — against the possibility that *C* is underestimated — and
+MUST be documented as such rather than presented as a scheduling result.
+
+**W4.** The ceiling published for this system is **U_max = 0.25** (RFC-0001,
+which records the admitted task set at *U* = 0.174 with 0.076 of headroom
+remaining). An implementation that applies a different ceiling is applying a
+different policy and MUST say so, with its basis. A ceiling chosen for
+plausibility rather than derived from a published margin is a number with no
+authority, and it will be discovered by the first configuration it wrongly
+admits.
+
+### 4a. The published figures already show that *B* and *I* are not zero
+
+RFC-0001 publishes two numbers measured on the same reference platform:
+
+| Quantity | Value | Source |
+|:--|--:|:--|
+| Σ *C_i* over the admitted task set | 694.2 µs | RFC-0001 §"Pipeline task set as currently admitted" |
+| End-to-end WCRT, L2 measured | 972.0 µs | RFC-0001, 12-hour run, 10.8 M epochs |
+
+The difference is **277.8 µs — 28.6 % of the measured worst case.** Release
+jitter at the published P99.9 figure accounts for 6.5 µs of it. The remaining
+**271.3 µs is blocking, interference, and scheduling overhead**: terms that are
+present in the measurement and absent from every admission test written so far.
+
+This is stronger than the observation of §9 that *B* = *I* = 0 is undischarged.
+The assumption is **contradicted by the project's own published measurement**,
+and the size of the contradiction is a quarter of the budget.
+
+Two obligations follow.
+
+**O1.** An implementation MUST NOT present a measured *response time* as if it
+were an execution time *C*. Adding jitter to a figure that already contains it
+double-counts one term while continuing to omit two others; the arithmetic
+happens to be conservative, and the model is nonetheless wrong. Only the
+decomposition makes the error visible, which is why N3 requires it.
+
+**O2.** Until *B* and *I* are measured separately, an implementation MUST use
+the measured end-to-end WCRT as *R* directly, and MUST label it as such — not
+decompose it into stages it did not measure.
 
 ### 5. Failure semantics
 
@@ -233,19 +270,25 @@ insufficient, because it places the obligation on every future caller.
 ### 7. Conformance vectors
 
 An implementation claiming conformance MUST reproduce the following for the
-canonical stage table (*C* = 972 µs) with *J* = 6.5 µs, *B* = *I* = 0, and a
-robustness ceiling of 80 %:
+published task set (Σ *C_i* = 694.2 µs, RFC-0001) against the published ceiling
+*U_max* = 0.25, with the measured end-to-end WCRT *R* = 972 µs:
 
-| *f_s* | Required outcome | Reported figures |
-|:--|:--|:--|
-| 250 SPS | admitted | R = 978.5 µs, D = 4000 µs, 24.46 % |
-| 500 SPS | admitted | R = 978.5 µs, D = 2000 µs, 48.93 % |
-| 1000 SPS | **refused** — margin | R = 978.5 µs, D = 1000 µs, 97.85 % > 80 % |
-| 2000 SPS | **refused** — deadline | R = 978.5 µs > D = 500 µs |
+| *f_s* | *T* | *U* = Σ*C_i*/*T* | *R* ≤ *T* | Required outcome |
+|:--|--:|--:|:--|:--|
+| 250 SPS | 4000 µs | 0.174 | yes | **admitted** |
+| 500 SPS | 2000 µs | 0.347 | yes | **refused** — utilisation ceiling |
+| 1000 SPS | 1000 µs | 0.694 | yes | **refused** — utilisation ceiling |
+| 2000 SPS | 500 µs | 1.388 | **no** | **refused** — deadline |
 
-The 1000 SPS row is the discriminating case: an implementation that admits it has
-implemented a deadline test without a robustness policy, and one that reports it
-as a missed deadline has conflated the two refusal reasons.
+The 500 SPS row is the discriminating case. The deadline test passes there —
+972 µs fits inside 2000 µs — and the configuration is nonetheless inadmissible
+under the published ceiling. An implementation that admits 500 SPS has either
+adopted a different ceiling without saying so, or has no ceiling at all.
+
+The 2000 SPS row is the only one refused by the deadline itself; an
+implementation that reports the other two as missed deadlines has conflated the
+two refusal reasons, which produces an audit trail that misdescribes the
+system.
 
 ## Drawbacks
 
@@ -311,21 +354,24 @@ Per RFC-0003, the claims in this RFC stand at the following levels:
   including the four conformance vectors of §7.
 - **Aggregate equals the sum of stages (N5)** — L1. Asserted by a test that
   fails the build when the published figure and the stage table disagree.
-- **The stage execution times themselves** — L2 at best. They are measured
-  figures on the reference hardware; the coverage argument required by W2 has
-  not been published, and no safety factor has been applied.
-- **The claim *B* = *I* = 0** — **not validated at any level.** It is an
-  assumption of the reference implementation, not a result (§9).
+- **The four-task execution times of RFC-0001** — L2. Measured on STM32F407
+  over a 12-hour run of 10.8 M epochs; the coverage argument required by W2 is
+  not published and no safety factor is stated.
+- **Any finer decomposition than those four tasks** — **not validated at any
+  level, and none is published.** See D1.
+- **The claim *B* = *I* = 0** — **refuted**, not merely unvalidated. The
+  project's own published figures differ by 277.8 µs between Σ *C_i* and the
+  measured end-to-end WCRT (§4a), of which at most 6.5 µs is jitter.
 - **Jitter-limited SNR (3)** — L1 as arithmetic; the σ figures it consumes are
   L2, pending L3 oscilloscope validation per RFC-0003.
 
-This RFC MUST NOT be promoted from draft to active while the *B* = *I* = 0 claim
-remains undischarged.
+This RFC MUST NOT be promoted from draft to active while D1, D2 and D3 stand.
 
 ## Conformance status of the reference implementation
 
-`axonos-hal` v0.1.1 implements (1) with *B* = *I* = 0 and does not declare those
-terms. Measured against this RFC it is **partially conformant**:
+`axonos-hal` v0.1.1 measured against this RFC is **not conformant**, in three
+ways that were found by reconciling it against RFC-0001 rather than by testing
+it against itself.
 
 | Requirement | Status |
 |:--|:--|
@@ -333,15 +379,40 @@ terms. Measured against this RFC it is **partially conformant**:
 | N2 name the term and both sides | conformant |
 | N3 declare all terms including zeros | **not conformant** — *B* and *I* are absent from the API, not merely zero |
 | N4 re-close on operating-point change | **not conformant** — no operating-point concept exists |
-| N5 aggregate equals stage sum | conformant, test-enforced |
+| N5 aggregate equals stage sum | conformant as arithmetic, but see D1 |
 | N6 non-forgeable proof | conformant — `configure` consumes `TimingBudget` by value |
-| F1 deadline miss counted | partially — the supervisor counts acquisition faults; the chain does not yet report its own overrun |
-| §7 conformance vectors | conformant, all four |
+| O1 response time not presented as execution time | **not conformant** — see D1 |
+| O2 use the measured WCRT undecomposed | **not conformant** — see D1 |
+| W4 published ceiling | **not conformant** — see D2 |
+| F1 deadline miss counted | partial — the supervisor counts acquisition faults; the chain does not report its own overrun |
+| §7 conformance vectors | **fails the 500 SPS row** — see D2 |
 
-The gap in N3 is the substantive one. On hardware where the acquisition path
-shares a bus with DMA, or where any interrupt may preempt the chain, *B* and *I*
-are not zero, and a budget that omits them is optimistic by an unstated margin.
-Closing this requires an API change and is the first item for `axonos-hal` 0.2.
+**D1 — a fabricated decomposition.** The crate carries a seven-entry stage
+table summing to 972 000 ns, documented as *"measured on the reference
+hardware"*. No such per-stage measurement is published anywhere in this
+project. RFC-0001 publishes a **four-task** set totalling 694.2 µs and,
+separately, an end-to-end WCRT of 972 µs. The seven-way split is an invention
+that reproduces the correct total, and presenting it as measurement is exactly
+the class of claim RFC-0003 exists to forbid. It also commits the O1 error:
+972 µs is a *response* time, and the crate adds jitter to it a second time.
+
+**D2 — a ceiling with no published basis.** The crate applies *U_max* = 0.80.
+The published ceiling is 0.25. The consequence is not theoretical: at 500 SPS
+the crate reports 48.9 % utilisation and **admits** the configuration, while
+the published policy refuses it at 0.347. A configuration the project's own
+RFC forbids is currently reachable through the reference implementation.
+
+**D3 — the fixture question.** RFC-0001 and RFC-0002 schedule L3 validation on
+an **STM32H573** fixture, while every L2 figure they publish was measured on
+**STM32F407**. Validating a Cortex-M33 part does not validate numbers measured
+on a Cortex-M4F part. Either the reference platform is moving — in which case
+the published figures are legacy and must be labelled so — or the fixture is
+the wrong board. This RFC does not resolve the question; it records that it is
+open, because an L3 campaign that measures the wrong silicon would consume the
+schedule and produce no evidence for the claims it was meant to discharge.
+
+All three are corrected in `axonos-hal` 0.2.0, which adopts the published task
+set, the published ceiling, and the measured WCRT undecomposed.
 
 ## References
 

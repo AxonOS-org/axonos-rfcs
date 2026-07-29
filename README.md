@@ -41,6 +41,8 @@ The format is adapted from the [Rust RFC process](https://github.com/rust-lang/r
 | [0005](rfcs/0005-capability-based-app-manifest.md) | Capability-Based Application Manifest | ![status-active](https://img.shields.io/badge/-active-success) | security | 2026-04-25 |
 | [0006](rfcs/0006-intent-wire-format-abi.md) | Intent Wire Format ABI | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | api | 2026-05-15 |
 | [0007](rfcs/0007-swarm-real-time-contract.md) | Swarm Real-Time Contract | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | scheduling | 2026-06-04 |
+| [0008](rfcs/0008-deadline-closure-acquisition-chain.md) | Deadline Closure for the Acquisition Chain | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | kernel | 2026-07-29 |
+| [0009](rfcs/0009-bounded-disclosure-sealed-neural-data.md) | Bounded Disclosure of Sealed Neural Data | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | security | 2026-07-29 |
 
 ### Status legend
 

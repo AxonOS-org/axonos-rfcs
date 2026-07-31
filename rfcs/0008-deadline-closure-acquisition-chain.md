@@ -369,6 +369,12 @@ D1 and D2 were closed in `axonos-hal` 0.2.0, which adopted the published task
 set and the published ceiling; the crate now refuses 500 SPS, as RFC-0001's
 policy requires.
 
+N4 was closed in 0.3.0, which added operating points and made a frequency
+transition a re-admission rather than a setting. The requirement mattered more
+than its position in the list suggested: it is what makes power management a
+correctness problem in this system, and a device that lowers its clock without
+re-closing its budget fails as a missed sample rather than as an error.
+
 D3 stands, and its resolution is a decision rather than a fix: the L2 figures
 are measured on STM32F407 while the platform's stated direction is a Cortex-M33
 part. An L3 campaign on the newer silicon would validate the *future* platform
@@ -378,7 +384,7 @@ measurements — this RFC MUST NOT be promoted from draft to active.
 
 ## Conformance status of the reference implementation
 
-`axonos-hal` v0.2.0 measured against this RFC is **conformant except N4**. The
+`axonos-hal` v0.3.0 measured against this RFC is **conformant**. D3 remains open and is a decision rather than a defect. The
 three deviations below were found by reconciling v0.1.1 against RFC-0001 rather
 than by testing it against itself; D1 and D2 are closed, D3 is open and is a
 decision rather than a defect. The remaining historical text is kept because a
@@ -391,7 +397,7 @@ it against itself.
 | N1 refuse on failure | conformant |
 | N2 name the term and both sides | conformant |
 | N3 declare all terms including zeros | conformant as of 0.2.0 — `close()` takes blocking and interference as a mandatory argument, including when zero |
-| N4 re-close on operating-point change | **not conformant** — no operating-point concept exists. This is the open requirement, and it is the one that makes power management a correctness problem rather than a comfort one |
+| N4 re-close on operating-point change | conformant as of 0.3.0 — `AdmittedPoint::transition_to` re-closes the budget at the destination before the device may arrive, and refuses with the receiver unchanged. Execution is scaled from the reference; a measured point overrides the model, and `is_measured()` makes the difference legible |
 | N5 aggregate equals stage sum | conformant as arithmetic, but see D1 |
 | N6 non-forgeable proof | conformant — `configure` consumes `TimingBudget` by value |
 | O1 response time not presented as execution time | conformant as of 0.2.0 — the constant is named `CANONICAL_WCRT_MEASURED_NS` and jitter is no longer added twice |

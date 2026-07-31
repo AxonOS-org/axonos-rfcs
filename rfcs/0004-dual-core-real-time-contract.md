@@ -56,7 +56,7 @@ These clauses together define what "dual-core real-time" means in AxonOS. A futu
 
 **Falsification criterion.** Any single epoch where the pipeline does not produce a published intent event within the period boundary (4 ms for the current configuration). The DSP cycle counter is sampled at the start of each epoch and at intent-publish; the difference is logged.
 
-**Current evidence.** Measured WCRT 972 µs over 12 hours / 10.8 M epochs, zero deadline misses (Level 2). Independent oscilloscope validation pending Q2 2026 (Level 3).
+**Current evidence.** Measured WCRT 972 µs over 12 hours / 10.8 M epochs, zero deadline misses (Level 2). Independent oscilloscope validation pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented (Level 3).
 
 ### DC2 — IPC latency bound
 
@@ -66,7 +66,7 @@ These clauses together define what "dual-core real-time" means in AxonOS. A futu
 
 **Mechanism.** The IPC follows the protocol of RFC-0002. A producer's `seq.store(index + 1, Release)` becomes visible to the consumer's `seq.load(Acquire)` within the cache coherence latency of the hardware platform. On the reference platform, the M4F and A53 share an L2 cache; observed cross-core sync time is approximately 80 ns plus the memory-system latency.
 
-**Current evidence.** Sub-0.2 µs measured during 12-hour pipeline run (Level 2). Independent oscilloscope validation pending Q2 2026 (Level 3).
+**Current evidence.** Sub-0.2 µs measured during 12-hour pipeline run (Level 2). Independent oscilloscope validation pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented (Level 3).
 
 ### DC3 — Wake-up determinism
 
@@ -189,7 +189,7 @@ Use ARINC 653 partitioning on a single processor with strict time-windowed sched
 
 ## Validation evidence level
 
-Per-clause evidence level is in the summary table above. The contract as a whole is at **L1 (design)** for fault-containment and graceful-degradation claims; **L2 (runtime measured)** for DC1, DC2, DC3 timing claims; pending L3 oscilloscope validation for all timing claims, scheduled Q2 2026.
+Per-clause evidence level is in the summary table above. The contract as a whole is at **L1 (design)** for fault-containment and graceful-degradation claims; **L2 (runtime measured)** for DC1, DC2, DC3 timing claims; pending L3 oscilloscope validation for all timing claims, scheduled pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented.
 
 ## References
 

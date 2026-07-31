@@ -201,7 +201,7 @@ Strict cyclic schedule, no runtime preemption. Highest determinism.
 
 - **Level 1 (instruction-count derived)** — The 640.2 µs pipeline WCET is instruction-count derived from `rustc 1.75 --opt-level=3` for `thumbv7em-none-eabihf`, summed against the [Cortex-M4F instruction timing reference](https://developer.arm.com/documentation/ddi0439/b/Programmers-Model/Instruction-set-summary).
 - **Level 2 (runtime measured)** — The 972 µs end-to-end WCRT and the 2.1 µs σ jitter are measured on STM32F407 over a 12-hour continuous run with BCI Competition IV Dataset 2a replayed via the ADS1299 test-signal mux. Sample population: 10.8 M epochs. Zero deadline misses.
-- **Level 3 (independent oscilloscope-validated)** — **Pending**, scheduled Phase 1 gate Q2 2026 on STM32H573 fixture.
+- **Level 3 (independent oscilloscope-validated)** — **Pending**, pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented (STM32H573 class part).
 
 ## References
 

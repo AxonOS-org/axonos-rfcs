@@ -6,7 +6,7 @@ track: security
 authors:
   - Denis Yermakou <connect@axonos.org>
 created: 2026-07-29
-updated: 2026-07-29
+updated: 2026-08-01
 implementation:
   - axonos-vault — Sealed / Reducer / Grant / release — v0.1.1, partially conformant (see §10)
   - axonos-consent — withdrawal semantics this RFC mirrors — current release
@@ -369,7 +369,10 @@ Per RFC-0003:
   the precedence case of N7.
 - **The budget bound in practice** — L1. A test drives 10 000 requests against a
   budget and observes exactly the predicted number of successes.
-- **Uncharged channel U2** — enumerated, **not** remediated. See §10.
+- **Uncharged channel U2** — enumerated **and** remediated in `axonos-vault`
+  0.2.0: a content-dependent refusal now costs a scalar, which brings the
+  channel under Theorem 1 with everything else. A thousand probes against a
+  128-bit grant yield four answers and then a refusal.
 - **Timing independence (U3)** — not measured at any level; the RFC accordingly
   makes no claim.
 
@@ -383,15 +386,24 @@ Per RFC-0003:
 | N2 single path | conformant |
 | N3 computed cost | conformant |
 | N4 record before return | conformant |
-| N5 budget ≤ recordable capacity | **not conformant** — a grant of 3200 bits is issuable while the 64-entry log caps effective disclosure at 2048 bits; the advertised ceiling is not the binding one |
+| N5 budget ≤ recordable capacity | conformant as of 0.2.0 — `issue()` refuses a budget the log cannot record, and sums commitments across live grants because the capacity is shared |
 | N6 issuer-side lifetime accounting | **not implemented** — no issuer layer exists yet |
 | N7 terminal withdrawal, highest precedence | conformant |
-| N8 uncharged channels enumerated and bounded | **not conformant** — U2 is open and unbounded |
-| §9 conformance vectors | conformant except the first row, which fails via N5 |
+| N8 uncharged channels enumerated and bounded | conformant as of 0.2.0 for U2; U3 (timing) remains enumerated and unmeasured, and the RFC makes no claim about it |
+| §9 conformance vectors | conformant |
 
 The N5 deviation was found by running the organs together in `axonos-stack`
 rather than by testing the vault alone, which is itself evidence for the
-integration layer. Both N5 and U2 are the first items for `axonos-vault` 0.2.
+integration layer. Both N5 and U2 were closed in `axonos-vault` 0.2.0.
+
+**What still blocks promotion out of draft.** N6 — issuer-side accounting
+across grants for one subject — is unimplemented, and no issuer layer exists to
+implement it in. Theorem 2 says the bound composes over grants; without an
+issuer that tracks the sum, an enforcing component can satisfy every other
+requirement here while its issuer hands out budgets without limit. That is not
+a gap in the mechanism, it is a missing layer above it, and this RFC stays in
+draft until either the layer exists or the requirement is withdrawn with an
+argument.
 
 ## References
 

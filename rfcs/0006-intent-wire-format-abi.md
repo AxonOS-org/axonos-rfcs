@@ -10,7 +10,7 @@ updated: 2026-05-15
 implementation:
   - axonos-sdk — IntentObservation (32-byte, repr(C, align(8))) — current release
   - axonos-consent — current release
-  - Promotion to active pending Q2 2026 L3 validation per RFC-0003
+  - Promotion to active pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented L3 validation per RFC-0003
 references:
   - RFC 2119 — Key words for use in RFCs to Indicate Requirement Levels (IETF, 1997)
   - RFC 2104 — HMAC: Keyed-Hashing for Message Authentication (IETF, 1997)
@@ -24,7 +24,7 @@ references:
 
 ## Summary
 
-This RFC specifies the binary wire format that defines the AxonOS kernel-to-application boundary: the layout of `IntentObservation` records, the capability bitfield, the truncated HMAC-SHA256 attestation tag, and the versioning rules under which the format may evolve while preserving compatibility for downstream implementations. The format is fixed at 32 bytes, 8-byte aligned, with explicit reserved fields for future extension. The RFC is published as **draft** and will be promoted to **active** once Phase 1 L3 oscilloscope validation (Q2 2026 per RFC-0003) confirms the wire format performs to specification on the reference hardware.
+This RFC specifies the binary wire format that defines the AxonOS kernel-to-application boundary: the layout of `IntentObservation` records, the capability bitfield, the truncated HMAC-SHA256 attestation tag, and the versioning rules under which the format may evolve while preserving compatibility for downstream implementations. The format is fixed at 32 bytes, 8-byte aligned, with explicit reserved fields for future extension. The RFC is published as **draft** and will be promoted to **active** once Phase 1 L3 oscilloscope validation (pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented per RFC-0003) confirms the wire format performs to specification on the reference hardware.
 
 ## Motivation
 
@@ -151,7 +151,7 @@ The record total size and endianness are frozen even across major versions: a 32
 
 This RFC will be promoted from **draft** to **active** when, and only when, all of the following are true:
 
-1. L3 oscilloscope-validated WCRT measurement is published per RFC-0003 (target Q2 2026).
+1. L3 oscilloscope-validated WCRT measurement is published per RFC-0003 (target pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented).
 2. At least two independent implementations have demonstrated interoperability against the conformance test vectors maintained in this repository.
 3. A six-month public review window has elapsed since publication of the draft.
 
@@ -216,7 +216,7 @@ Per RFC-0003, the claims in this RFC stand at the following levels:
 - **Wire format size and alignment** — L1. Compile-time assertions in `axonos-sdk` enforce `size_of::<IntentObservation>() == 32` and `align_of::<IntentObservation>() == 8`. The assertions are evaluated at build time on every CI run.
 - **Decoder rejection of malformed records** — L2. Unit tests in `axonos-sdk` cover the malformed-vector cases; runtime measurement on the reference platform is in progress as part of Phase 1.
 - **HMAC verification correctness** — L1. The HMAC-SHA256 construction is delegated to a verified primitive; the truncation and key derivation are specified by reference to RFC 2104 / RFC 5869 / RFC 6234 and verified by test vectors against those RFCs.
-- **End-to-end WCRT under this wire format** — pending L3 oscilloscope validation per RFC-0003 (target Q2 2026).
+- **End-to-end WCRT under this wire format** — pending L3 oscilloscope validation per RFC-0003 (target pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented).
 
 The RFC will not be promoted from draft to active until the pending L3 claim is resolved, regardless of the schedule for other items.
 

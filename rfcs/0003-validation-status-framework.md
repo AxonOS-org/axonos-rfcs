@@ -158,10 +158,23 @@ L2 is the right evidence level for engineering claims to peer engineers, for ben
 A claim that is not yet evidenced at any level is **pending** and must be tagged with:
 
 - The intended evidence level (typically L3 if the claim has any clinical or regulatory implication).
-- A target date for evidence acquisition.
+- **Either** a target date for evidence acquisition **or**, where the work
+  depends on something outside the project's control, the *condition* that
+  releases it. A date invented to fill this field is worse than an honest
+  condition: it expires, and an expired date left standing says the project does
+  not track its own promises — which is a stronger negative signal than "blocked
+  on hardware we do not have yet" was ever going to be.
 - The blocker, if any (e.g., "requires H573 evaluation board fixture, in procurement").
 
-Pending claims may be discussed in design documents, RFCs, and architectural articles. They may not be quoted as if they were measured. The phrase "GPIO-measured" is only appropriate when L3 evidence exists; until then the equivalent text reads "L1 instruction-count derived (L3 GPIO validation pending Q2 2026)" or similar.
+A pending claim whose target date has passed **must** be revised at the next
+edit of the document that carries it. Revising means one of three things, and
+never a new date chosen to look plausible: state the condition instead; state
+that the claim is withdrawn; or state that evidence now exists and promote it.
+This clause exists because five RFCs in this repository carried `pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented` a
+month into Q3, in a framework whose entire purpose is that a claim's status is
+never ambiguous.
+
+Pending claims may be discussed in design documents, RFCs, and architectural articles. They may not be quoted as if they were measured. The phrase "GPIO-measured" is only appropriate when L3 evidence exists; until then the equivalent text reads "L1 instruction-count derived (L3 GPIO validation pending: requires an instrumented fixture, not yet procured)" or similar.
 
 ### Application of the framework
 

@@ -263,7 +263,7 @@ MPSC or MPMC ring with CAS-based reservation.
 
 - **Level 1 (instruction-count derived)** — The IPC delivery path is instruction-count derived at ≤ 0.2 µs on Cortex-M4F at 168 MHz, comprising one acquire load, one release store, and the slot read.
 - **Level 2 (runtime measured)** — The SPSC protocol is measured at sub-0.2 µs cross-task delivery as part of the 12-hour pipeline runtime measurement (RFC-0001 § Validation evidence level).
-- **Level 3 (independent oscilloscope-validated)** — **Pending**. GPIO-instrumented IPC delivery measurement on STM32H573 fixture is part of the Phase 1 gate Q2 2026.
+- **Level 3 (independent oscilloscope-validated)** — **Pending**. GPIO-instrumented IPC delivery measurement on STM32H573 fixture is pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented.
 
 ## References
 

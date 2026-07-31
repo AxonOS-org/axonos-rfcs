@@ -6,7 +6,7 @@ track: kernel
 authors:
   - Denis Yermakou <connect@axonos.org>
 created: 2026-07-29
-updated: 2026-07-29
+updated: 2026-08-01
 implementation:
   - axonos-hal — TimingBudget::close — v0.2.0 adopts the published figures; v0.1.1 deviations recorded in §9
   - axonos-supervisor — deadline-miss observability — v0.1.0
@@ -365,11 +365,24 @@ Per RFC-0003, the claims in this RFC stand at the following levels:
 - **Jitter-limited SNR (3)** — L1 as arithmetic; the σ figures it consumes are
   L2, pending L3 oscilloscope validation per RFC-0003.
 
-This RFC MUST NOT be promoted from draft to active while D1, D2 and D3 stand.
+D1 and D2 were closed in `axonos-hal` 0.2.0, which adopted the published task
+set and the published ceiling; the crate now refuses 500 SPS, as RFC-0001's
+policy requires.
+
+D3 stands, and its resolution is a decision rather than a fix: the L2 figures
+are measured on STM32F407 while the platform's stated direction is a Cortex-M33
+part. An L3 campaign on the newer silicon would validate the *future* platform
+while the published numbers describe the *current* one. Until that is settled in
+writing — which figures the campaign discharges, and which remain F407
+measurements — this RFC MUST NOT be promoted from draft to active.
 
 ## Conformance status of the reference implementation
 
-`axonos-hal` v0.1.1 measured against this RFC is **not conformant**, in three
+`axonos-hal` v0.2.0 measured against this RFC is **conformant except N4**. The
+three deviations below were found by reconciling v0.1.1 against RFC-0001 rather
+than by testing it against itself; D1 and D2 are closed, D3 is open and is a
+decision rather than a defect. The remaining historical text is kept because a
+conformance table that erases its own failures is not evidence of anything, in
 ways that were found by reconciling it against RFC-0001 rather than by testing
 it against itself.
 
@@ -377,15 +390,15 @@ it against itself.
 |:--|:--|
 | N1 refuse on failure | conformant |
 | N2 name the term and both sides | conformant |
-| N3 declare all terms including zeros | **not conformant** — *B* and *I* are absent from the API, not merely zero |
-| N4 re-close on operating-point change | **not conformant** — no operating-point concept exists |
+| N3 declare all terms including zeros | conformant as of 0.2.0 — `close()` takes blocking and interference as a mandatory argument, including when zero |
+| N4 re-close on operating-point change | **not conformant** — no operating-point concept exists. This is the open requirement, and it is the one that makes power management a correctness problem rather than a comfort one |
 | N5 aggregate equals stage sum | conformant as arithmetic, but see D1 |
 | N6 non-forgeable proof | conformant — `configure` consumes `TimingBudget` by value |
-| O1 response time not presented as execution time | **not conformant** — see D1 |
-| O2 use the measured WCRT undecomposed | **not conformant** — see D1 |
-| W4 published ceiling | **not conformant** — see D2 |
+| O1 response time not presented as execution time | conformant as of 0.2.0 — the constant is named `CANONICAL_WCRT_MEASURED_NS` and jitter is no longer added twice |
+| O2 use the measured WCRT undecomposed | conformant as of 0.2.0 — the four published tasks replaced the invented seven-way split |
+| W4 published ceiling | conformant as of 0.2.0 — the ceiling is RFC-0001's 0.25, and 500 SPS is refused at 0.347 |
 | F1 deadline miss counted | partial — the supervisor counts acquisition faults; the chain does not report its own overrun |
-| §7 conformance vectors | **fails the 500 SPS row** — see D2 |
+| §7 conformance vectors | conformant — all four rows, including the discriminating 500 SPS refusal |
 
 **D1 — a fabricated decomposition.** The crate carries a seven-entry stage
 table summing to 972 000 ns, documented as *"measured on the reference

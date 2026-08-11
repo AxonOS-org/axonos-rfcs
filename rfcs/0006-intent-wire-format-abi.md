@@ -6,9 +6,9 @@ track: api
 authors:
   - Denis Yermakou <connect@axonos.org>
 created: 2026-05-15
-updated: 2026-05-15
+updated: 2026-08-11
 implementation:
-  - axonos-sdk — IntentObservation (32-byte, repr(C, align(8))) — current release
+  - axonos-sdk 0.3.5 — IntentObservation (32-byte, repr(C, align(8))) — current release; this RFC is reconciled against it field by field
   - axonos-consent — current release
   - Promotion to active pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented L3 validation per RFC-0003
 references:
@@ -24,7 +24,7 @@ references:
 
 ## Summary
 
-This RFC specifies the binary wire format that defines the AxonOS kernel-to-application boundary: the layout of `IntentObservation` records, the capability bitfield, the truncated HMAC-SHA256 attestation tag, and the versioning rules under which the format may evolve while preserving compatibility for downstream implementations. The format is fixed at 32 bytes, 8-byte aligned, with explicit reserved fields for future extension. The RFC is published as **draft** and will be promoted to **active** once Phase 1 L3 oscilloscope validation (pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented per RFC-0003) confirms the wire format performs to specification on the reference hardware.
+This RFC specifies the binary wire format that defines the AxonOS kernel-to-application boundary: the layout of `IntentObservation` records, the capability bitfield, the truncated HMAC-SHA256 attestation tag, and the versioning rules under which the format may evolve while preserving compatibility for downstream implementations. The format is fixed at 32 bytes, 8-byte aligned, with three unused payload bytes as its only extension space. The RFC is published as **draft** and will be promoted to **active** once Phase 1 L3 oscilloscope validation (pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented per RFC-0003) confirms the wire format performs to specification on the reference hardware.
 
 ## Motivation
 
@@ -44,7 +44,8 @@ An AxonOS application sees the world as a stream of typed events, each delivered
 - A discriminant identifying the event kind (Navigation, WorkloadAdvisory, SessionQuality, ArtifactEvents).
 - A payload byte interpreted according to the kind.
 - A fixed-point confidence value in $[0, 1)$.
-- A per-subscription sequence number for replay and drop detection.
+- An opaque session identifier, so an observation can be attributed to the
+  session whose consent authorised it.
 - An 8-byte truncated HMAC-SHA256 tag for integrity, with the full 32-byte tag available out-of-band for stronger verification.
 
 The application receives observations through the SDK's `IntentStream`. The SDK validates the record against this RFC: any record with a reserved value, a reserved bit set, a timestamp exceeding the documented bound, or a failed HMAC truncation check is rejected before reaching application code. An application that wishes to implement its own decoder against the wire format can do so against this RFC alone.
@@ -57,7 +58,7 @@ Capabilities are encoded as a separate 32-bit bitfield delivered once at subscri
 
 All multi-byte integer fields are little-endian. Field offsets are stated in bytes from the start of the record. The full record is aligned to an 8-byte boundary in memory and on the wire. The key words MUST, MUST NOT, SHOULD, SHOULD NOT, MAY are to be interpreted as in RFC 2119.
 
-A field marked *reserved* MUST be zero on emission and MUST NOT be interpreted on receipt. Future minor revisions of this RFC MAY assign meaning to reserved fields.
+Bytes marked unused — `payload[1..=3]` in ABI version 1 — MUST be zero on emission and MUST NOT be interpreted on receipt. Future minor revisions of this RFC MAY assign meaning to them. There is no separate reserved field: every one of the 32 bytes is assigned.
 
 ### Record layout — IntentObservation
 
@@ -65,43 +66,81 @@ A field marked *reserved* MUST be zero on emission and MUST NOT be interpreted o
 Offset  Size  Type    Field
 ─────── ───── ──────  ─────────────────────────────
   0      8    u64     timestamp_us
-  8      1    u8      kind_tag
-  9      1    u8      direction
- 10      2    u16     confidence_q0_16
- 12      4    u32     sequence
- 16      8    u8[8]   attestation_tag_truncated
- 24      8    u8[8]   reserved
+  8      2    u16     kind_tag
+ 10      2    u16     quality_raw        (Q0.16 confidence)
+ 12      4    u8[4]   payload
+ 16      8    u64     session_id
+ 24      8    u8[8]   attestation        (truncated HMAC-SHA256)
 ─────── ───── ──────  ─────────────────────────────
 Total  32 bytes, 8-byte aligned
 ```
+
+This table is the layout `axonos-sdk` emits and asserts at compile time
+(`size_of == 32`, `align_of == 8`). Field names are the ones the SDK uses, so a
+reader can move between this RFC and `axonos_sdk::IntentObservation` without a
+translation step.
 
 ### Field semantics
 
 **`timestamp_us` (u64, offset 0).** Microseconds since session start, as defined by the `MonotonicTimestamp` type in `axonos-sdk`. Within a session, this value MUST NOT decrease. Values MUST NOT exceed $\mathrm{SESSION\_MAX\_REASONABLE\_US} = 2^{48}$ (defined in `axonos-sdk` — approximately 8.9 years at 1 µs resolution). Receivers MUST reject any record with a timestamp exceeding this bound. The bound prevents adversarial inputs from corrupting downstream arithmetic.
 
-**`kind_tag` (u8, offset 8).** Discriminant for the observation kind:
+**`kind_tag` (u16, offset 8).** Discriminant for the observation kind:
 
-| Value     | Kind                | Payload interpretation |
-|:----------|:--------------------|:-----------------------|
-| `0x00`    | Navigation          | `direction` enum       |
-| `0x01`    | WorkloadAdvisory    | `direction` enum       |
-| `0x02`    | SessionQuality      | `direction` enum       |
-| `0x03`    | ArtifactEvents      | `direction` enum       |
-| `0x04`..`0xFF` | reserved       | —                      |
+| Value    | Kind       | `payload[0]` interpretation |
+|:---------|:-----------|:----------------------------|
+| `0x0001` | Direction  | `Direction` enum            |
+| `0x0002` | Load       | `Load` enum                 |
+| `0x0003` | Quality    | `Quality` enum              |
+| others   | unassigned | —                           |
 
-Receivers MUST reject any record with `kind_tag` outside the defined range.
+An unassigned `kind_tag` does **not** invalidate the record. The SDK decodes it
+to `IntentKind::Unknown` and passes it through, so that a receiver built against
+this revision keeps working when a later kernel emits a kind it has never heard
+of. A receiver MUST NOT act on an observation it decodes as `Unknown`, and MUST
+NOT infer a default kind from one.
 
-**`direction` (u8, offset 9).** Capability-dependent payload. For each defined `kind_tag` value, only the documented `direction` values are valid; all others are reserved.
+**`payload` (u8[4], offset 12).** Kind-dependent. Byte `payload[0]` carries the
+enum value selected by `kind_tag`; bytes `payload[1..=3]` are unused in ABI
+version 1, MUST be zero on emission, and MUST NOT be interpreted on receipt.
+They are the only extension space in the record.
 
-For `Navigation` (`0x00`): `0x00` Idle, `0x01` Left, `0x02` Right, `0x03` Up, `0x04` Down. For `WorkloadAdvisory` (`0x01`): `0x00` Low, `0x01` Medium, `0x02` High. For `SessionQuality` (`0x02`): `0x00` Good, `0x01` Degraded, `0x02` Lost. For `ArtifactEvents` (`0x03`): `0x00` Eye, `0x01` Muscle, `0x02` Motion, `0x03` Electrode.
+For `Direction` (`0x0001`): `0` Up, `1` Right, `2` Down, `3` Left, `4` Neutral.
+For `Load` (`0x0002`): `0` Low, `1` Moderate, `2` High.
+For `Quality` (`0x0003`): `0` High, `1` Moderate, `2` Low, `3` NoSignal.
 
-**`confidence_q0_16` (u16, offset 10).** Classifier confidence as Q0.16 fixed-point. The encoded value $v$ represents the confidence $v / 65536$. The range is $[0,\, 65535/65536] \approx [0,\, 0.99998]$. The value $1.0$ exactly is **not representable** by design — confidence claims of exactly 1.0 are forbidden, eliminating a class of overconfident-classifier defects.
+A value outside the range defined for its kind decodes to `IntentKind::Unknown`,
+by the same rule and for the same reason as an unassigned `kind_tag`.
 
-**`sequence` (u32, offset 12).** Monotonically increasing per-subscription counter, starting at 1 on subscription activation, incrementing by 1 per emitted observation, wrapping modulo $2^{32}$. Consumers MUST detect dropped observations by tracking expected vs. received sequence numbers. A non-monotonic sequence (modulo wrap) indicates either replay or kernel fault and MUST be treated as a security event.
+**`quality_raw` (u16, offset 10).** Classifier confidence as Q0.16 fixed-point.
+The encoded value $v$ represents $v / 65535$ — the denominator is
+`axonos_sdk::CONFIDENCE_DENOM`, which is `u16::MAX`, **not** $2^{16}$. The range
+is therefore $[0,\, 1.0]$ inclusive, and $1.0$ **is** representable as
+`0xFFFF`.
 
-**`attestation_tag_truncated` (u8[8], offset 16).** First 8 bytes (most significant) of the HMAC-SHA256 tag computed per § Attestation. Receivers MUST verify this tag against either (a) a locally recomputed HMAC over the first 24 bytes of the record using the session key, or (b) the full 32-byte HMAC delivered out-of-band via the consent channel.
+> **Corrected 2026-08-11.** Earlier revisions of this RFC specified a
+> denominator of $65536$ and stated that $1.0$ was deliberately unrepresentable,
+> "eliminating a class of overconfident-classifier defects". The shipped ABI
+> does not do that. The claim is withdrawn rather than restated, because a
+> safety property that the implementation does not hold is worse than no claim:
+> a reader could have built a consumer that treats $1.0$ as impossible. Whether
+> to forbid $1.0$ is a live design question, recorded under Open questions.
 
-**`reserved` (u8[8], offset 24).** Reserved for future extension. MUST be all zero on emission. MUST NOT be interpreted by current-version receivers. Consumers handling regulated data SHOULD verify reserved fields are zero and treat non-zero reserved fields as a security event.
+Comparisons and decision logic MUST use the raw `u16`. The SDK's `f32`
+conversion is documented for display only and is not architecture-stable.
+
+**`session_id` (u64, offset 16).** Opaque session identifier, assigned by the
+kernel at session activation. A receiver MUST treat it as an opaque token: it
+carries no structure this RFC defines, and nothing may be inferred from its
+value, ordering or spacing. It exists so that an observation can be attributed
+to the session whose consent authorised it, and so that records from two
+sessions cannot be interleaved undetected.
+
+**`attestation` (u8[8], offset 24).** The high 8 bytes of the HMAC-SHA256 tag
+computed per § Attestation. Receivers MUST verify it against either (a) a
+locally recomputed HMAC over the first 24 bytes of the record using the session
+key, or (b) the full 32-byte tag delivered out-of-band via the consent channel.
+The SDK performs (a) unless built with the `kernel-stub` feature, which disables
+verification and is not a deployment configuration.
 
 ### Capability bitfield
 
@@ -121,11 +160,31 @@ Receivers MUST reject any handshake with reserved bits set. The bit layout is fi
 
 ### Attestation
 
-The attestation tag is HMAC-SHA256 (RFC 2104, RFC 6234) computed over the first 24 bytes of the `IntentObservation` record — that is, every field except `attestation_tag_truncated` and `reserved`. The 32-byte result is truncated to the high 8 bytes for inclusion in the record at offset 16. The remaining 24 bytes are available out-of-band via the consent channel for stronger verification when the consumer has the performance budget.
+The attestation tag is HMAC-SHA256 (RFC 2104, RFC 6234) computed over the first
+24 bytes of the `IntentObservation` record — that is, every field except
+`attestation` itself. The 32-byte result is truncated to the high 8 bytes and
+placed at offset 24. The remaining 24 bytes are available out-of-band via the
+consent channel for stronger verification when the consumer has the performance
+budget.
+
+Because `attestation` occupies bytes 24..32, "the first 24 bytes" and "every
+field except the tag" are the same span. Earlier revisions placed the tag at
+offset 16 while still specifying the HMAC over the first 24 bytes, which put the
+tag inside its own input; no implementation could satisfy both halves of that
+sentence.
 
 The truncation rationale: the wire record budget is fixed at 32 bytes (one cache line on Cortex-M4F, matching the SPSC slot size in RFC-0002). At 64-bit length, the truncated tag provides $2^{63}$ expected work for a single forgery, which is acceptable for event-level integrity on a 4 ms epoch period. Consumers requiring stronger per-event integrity SHOULD verify the full 256-bit tag periodically (recommended: at least once per `SessionQuality` event, i.e., at most 2 Hz).
 
-The HMAC key is derived per-session via HKDF-SHA256 (RFC 5869) from a device-unique secret stored in the ATECC608B protected slot 0, with the session ID (16 bytes, generated by the kernel at session activation) as the derivation input.
+The HMAC key is derived per-session via HKDF-SHA256 (RFC 5869) from a
+device-unique secret stored in the ATECC608B protected slot 0, with a session
+identifier generated by the kernel at session activation as the derivation
+input.
+
+The relationship between that derivation input and the 8-byte `session_id`
+carried in the record is deliberately not asserted here: this RFC specifies the
+wire record, and the kernel's key schedule is out of its scope. A reader MUST
+NOT assume the record field is the derivation input. Pinning that relationship
+is recorded under Open questions.
 
 ### Versioning rules
 
@@ -140,7 +199,7 @@ Permitted changes by version step:
 | Add new `kind_tag` value            |   ✗   |   ✓   |   ✓   |
 | Add new `direction` value           |   ✗   |   ✓   |   ✓   |
 | Assign reserved bit/byte            |   ✗   |   ✓   |   ✓   |
-| Change attestation_tag_truncated length |   ✗   |   ✗   |   ✓   |
+| Change `attestation` length             |   ✗   |   ✗   |   ✓   |
 | Change HMAC algorithm               |   ✗   |   ✗   |   ✓   |
 | Change endianness                   |   ✗   |   ✗   |   ✗   |
 | Change record total size            |   ✗   |   ✗   |   ✗   |
@@ -189,7 +248,7 @@ Rejected because it requires either a larger record size (breaks cache-line disc
 
 ## Prior art
 
-This RFC draws on three traditions. From IETF: fixed-size headers with explicit reserved fields (RFC 791 IPv4, RFC 8200 IPv6), explicit byte-order conventions, and the version-discovery handshake. From CAN bus and automotive embedded networking: 8-byte payload discipline as a means of pinning the cost of message handling. From safety-critical real-time systems (ARINC 653, AUTOSAR): formal specification of inter-partition message formats as a precondition for verification.
+This RFC draws on three traditions. From IETF: fixed-size headers with explicit extension space (RFC 791 IPv4, RFC 8200 IPv6), explicit byte-order conventions, and the version-discovery handshake. From CAN bus and automotive embedded networking: 8-byte payload discipline as a means of pinning the cost of message handling. From safety-critical real-time systems (ARINC 653, AUTOSAR): formal specification of inter-partition message formats as a precondition for verification.
 
 The truncated HMAC approach is established in NIST SP 800-107 § 5.3.4 and in IETF practice (RFC 4868 § 2.6 for IPsec). The 64-bit truncation length is at the lower bound of NIST recommendations and is justified here by the supplementary full-tag verification path; in contexts where the full-tag path is unavailable, this RFC's truncation length would be insufficient.
 
@@ -199,7 +258,35 @@ The capability bitfield design with reserved bits and explicit non-renumbering i
 
 1. **Conformance test vector format.** The vectors will live under `vectors/rfc-0006/` in this repository. The exact encoding (raw binary, hex with comments, or both) is under discussion; the working assumption is "both, in parallel directories." Decision before promotion to active.
 2. **HKDF salt source.** The current `axonos-consent` implementation uses a fixed salt; whether to derive the salt from the session ID instead is open. Decision before promotion to active.
-3. **Confidence range adjustment.** Whether to extend `confidence_q0_16` to Q1.15 signed in a future minor revision (allowing negative confidence as a signal-quality indicator) is deferred to RFC-0008 or later, not committed.
+3. **Confidence range adjustment.** Whether to extend `quality_raw` to Q1.15
+   signed in a future minor revision (allowing negative confidence as a
+   signal-quality indicator) is deferred to RFC-0008 or later, not committed.
+4. **Replay and drop detection — no mechanism is specified.** Earlier revisions
+   of this RFC placed a `sequence` counter at offset 12 and required consumers
+   to "detect dropped observations by tracking expected vs. received sequence
+   numbers", treating a non-monotonic value as a security event. **The shipped
+   record has no such field**, so that requirement could not be met by any
+   implementation, and it has been withdrawn rather than left standing.
+
+   What remains is the gap it was covering. `timestamp_us` is monotonic within a
+   session and gives a *weak* ordering signal — a receiver can notice time going
+   backwards, but cannot distinguish a dropped observation from an epoch in
+   which the classifier emitted nothing. The attestation tag makes a forged
+   record infeasible; it does not make a *replayed* one detectable, because a
+   replay is a byte-identical record with a valid tag.
+
+   Three options, none yet chosen: spend `payload[1..=3]` on a 24-bit counter,
+   which fits the existing record but caps the wrap period; move the counter
+   into a v2 record, which is a breaking change; or specify replay detection at
+   the transport layer in RFC-0007 and state here that the wire record does not
+   carry it. **Until this is decided, this RFC makes no replay-detection claim
+   and a consumer MUST NOT assume one.** Decision before promotion to active.
+5. **Whether `session_id` is the HKDF derivation input.** The key schedule
+   derives the per-session HMAC key from a kernel-generated session identifier;
+   the record carries an 8-byte `session_id`. Whether these are the same value,
+   and whether that should be normative, is unsettled — binding them would let a
+   receiver recompute the key schedule's input from the wire, which may be
+   undesirable. Decision before promotion to active.
 
 ## Future possibilities
 

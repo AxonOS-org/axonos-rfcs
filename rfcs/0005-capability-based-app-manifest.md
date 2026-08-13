@@ -217,10 +217,29 @@ Use the [WebAssembly Component Model](https://github.com/WebAssembly/component-m
 
 This RFC is largely a security and isolation specification rather than a performance specification. The performance claims it touches:
 
-- **Manifest verification time** — bounded; expected ≤ 1 ms on the A53. **Pending** measurement (Level 2).
-- **HMAC verification per event** — ≈ 18 µs per event on M4F via ATECC608B. **Level 1** instruction-count derived; Level 2 measurement pending.
+- **Manifest verification time** — bounded; expected ≤ 1 ms on the A53. **Pending** measurement (L2).
+- **HMAC verification per event** — ≈ 18 µs per event on M4F via ATECC608B. **L1** instruction-count derived; Level 2 measurement pending.
 
-The security claims (capability isolation, attestation correctness) require Level 3 evidence acquired via penetration testing, which is part of the Phase 2 validation programme.
+The security claims (capability isolation, attestation correctness) require L3 evidence acquired via penetration testing, which is part of the Phase 2 validation programme.
+
+## Conformance
+
+Vectors for this RFC live in
+[`axonos-conformance`](https://github.com/AxonOS-org/axonos-conformance) and are
+re-derived from the constants published above rather than transcribed, so a
+vector that disagrees with this document fails the build in that repository.
+
+This section exists because it was missing. The vectors were written, the
+implementations were checked against them, and this RFC said nothing about
+either — which left a reader with a specification and no way to know that
+anything enforced it. RFC-0006, 0008 and 0009 name theirs; this one now does
+too.
+
+**What the vectors do not cover.** The security claims of §4 — capability
+isolation and attestation correctness — are not reachable by a vector. A vector
+can show that a manifest is parsed as specified; it cannot show that an
+application cannot escape the capability set it declared. That requires L3
+evidence from an independent implementation, and none exists.
 
 ## References
 

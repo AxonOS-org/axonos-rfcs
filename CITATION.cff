@@ -8,7 +8,9 @@ type: software
 authors:
   - given-names: Denis
     family-names: Yermakou
-    affiliation: "AxonOS Project"
+    email: "connect@axonos.org"
+    affiliation: "The AxonOS Project"
+    website: "https://axonos.org"
 repository-code: "https://github.com/AxonOS-org/axonos-rfcs"
 url: "https://axonos.org"
 abstract: >-
@@ -20,3 +22,16 @@ keywords:
   - neurotechnology
   - rust
 license: CC-BY-SA-4.0
+
+# The version of the RFC series, not of any single RFC.
+#
+# This file existed without one. A citation file's entire purpose is to say
+# which version somebody is citing, and this one named a repository and a
+# title and left the question it exists to answer unanswered — so anyone
+# citing it cited "the RFCs", which is not a thing that can be checked later.
+#
+# Bumped when an RFC changes status or a normative requirement changes, not
+# when a typo is fixed.
+version: "1.1.0"
+date-released: "2026-08-11"
+license: "CC-BY-SA-4.0"

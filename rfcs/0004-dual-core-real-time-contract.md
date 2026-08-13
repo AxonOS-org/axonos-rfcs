@@ -56,7 +56,7 @@ These clauses together define what "dual-core real-time" means in AxonOS. A futu
 
 **Falsification criterion.** Any single epoch where the pipeline does not produce a published intent event within the period boundary (4 ms for the current configuration). The DSP cycle counter is sampled at the start of each epoch and at intent-publish; the difference is logged.
 
-**Current evidence.** Measured WCRT 972 µs over 12 hours / 10.8 M epochs, zero deadline misses (Level 2). Independent oscilloscope validation pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented (Level 3).
+**Current evidence.** Measured WCRT 972 µs over 12 hours / 10.8 M epochs, zero deadline misses (L2). Independent oscilloscope validation pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented (L3).
 
 ### DC2 — IPC latency bound
 
@@ -66,7 +66,7 @@ These clauses together define what "dual-core real-time" means in AxonOS. A futu
 
 **Mechanism.** The IPC follows the protocol of RFC-0002. A producer's `seq.store(index + 1, Release)` becomes visible to the consumer's `seq.load(Acquire)` within the cache coherence latency of the hardware platform. On the reference platform, the M4F and A53 share an L2 cache; observed cross-core sync time is approximately 80 ns plus the memory-system latency.
 
-**Current evidence.** Sub-0.2 µs measured during 12-hour pipeline run (Level 2). Independent oscilloscope validation pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented (Level 3).
+**Current evidence.** Sub-0.2 µs measured during 12-hour pipeline run (L2). Independent oscilloscope validation pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented (L3).
 
 ### DC3 — Wake-up determinism
 
@@ -76,7 +76,7 @@ These clauses together define what "dual-core real-time" means in AxonOS. A futu
 
 **Mechanism.** The DSP publishes via the IPC ring, then triggers an inter-processor interrupt (IPI). The A53 IPI handler is registered as a high-priority interrupt that pre-empts whatever the A53 was doing (subject only to other higher-priority interrupts being already in service). The handler dispatches to the application servicing task, which reads the IPC ring per RFC-0002.
 
-**Current evidence.** Measured 281 µs total A53 pipeline (Article #12 § A53 pipeline), within which the dispatch component is < 50 µs (Level 2). Independent validation pending.
+**Current evidence.** Measured 281 µs total A53 pipeline (Article #12 § A53 pipeline), within which the dispatch component is < 50 µs (L2). Independent validation pending.
 
 ### DC4 — Fault containment
 
@@ -102,7 +102,7 @@ These clauses together define what "dual-core real-time" means in AxonOS. A futu
 
 When the A53 becomes responsive again, the DSP detects the resumed `tail` advancement and resumes intent publication. There is no resync handshake — the consent state machine and signal pipeline state were continuous on the DSP side throughout.
 
-**Current evidence.** Mechanism designed (Level 1). Runtime fault-injection testing planned for Phase 2.
+**Current evidence.** Mechanism designed (L1). Runtime fault-injection testing planned for Phase 2.
 
 ### DC6 — Attestation propagation
 
@@ -118,7 +118,7 @@ When the A53 becomes responsive again, the DSP detects the resumed `tail` advanc
 - The A53's application-servicing task verifies the tag on every event before delivering it to user-space.
 - If the tag is missing or fails verification, the event is dropped and a `Error::AttestationFailed` diagnostic is emitted. This is treated as a serious anomaly (potential memory corruption between DSP write and A53 read).
 
-**Current evidence.** HMAC-SHA256 mechanism specified (Level 1). Runtime measurement of attestation overhead pending Phase 1 H573 fixture (Level 2/3).
+**Current evidence.** HMAC-SHA256 mechanism specified (L1). Runtime measurement of attestation overhead pending Phase 1 H573 fixture (Level 2/3).
 
 ### Mapping to the swarm contract
 

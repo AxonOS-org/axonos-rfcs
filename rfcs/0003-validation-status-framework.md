@@ -47,7 +47,7 @@ A claim about AxonOS performance, latency, correctness, or behaviour is classifi
 
 - **Level 2 — Runtime measured.** The number is observed by executing the implementation on the reference hardware over a stated interval, with a stated input distribution, and a stated measurement instrument (typically the on-chip cycle counter). This validates that the L1 estimate holds under the actual cache, branch prediction, and bus contention conditions of the target platform.
 
-- **Level 3 — Independent oscilloscope-validated.** The number is observed by an external instrument (logic analyzer, oscilloscope, current probe) that is not part of the system under test. This eliminates the possibility that a software-side bug in the measurement instrumentation produces a misleading number. Level 3 evidence is what regulatory submissions ultimately rely on.
+- **Level 3 — Independent oscilloscope-validated.** The number is observed by an external instrument (logic analyzer, oscilloscope, current probe) that is not part of the system under test. This eliminates the possibility that a software-side bug in the measurement instrumentation produces a misleading number. L3 evidence is what regulatory submissions ultimately rely on.
 
 A claim is classified at **the level of the evidence that supports it at the time of publication**. A claim that is currently L1 may be elevated to L2 once the hardware measurement is performed. A claim that is currently L2 may be elevated to L3 once the oscilloscope-validated measurement is performed. Claims may not be silently elevated — every elevation must be a documented evidence acquisition with a date, an instrument identification, and a sample size.
 

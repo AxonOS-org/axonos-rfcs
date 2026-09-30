@@ -193,8 +193,6 @@ For substantive RFC discussion, please use [GitHub Discussions](../../discussion
 
 [medium.com/@AxonOS](https://medium.com/@AxonOS) &nbsp;·&nbsp; [github.com/AxonOS-org](https://github.com/AxonOS-org)
 
-<sub>Singapore · Zurich · Berlin · Milano · San Mateo</sub>
-
 <sub>The RFC process is how the kernel earns the right to be called real-time.</sub>
 
 </div>

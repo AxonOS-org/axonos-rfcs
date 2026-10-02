@@ -13,6 +13,7 @@
 [![Process](https://img.shields.io/badge/Process-active-0d7a5f?style=flat-square)](#process)
 [![License](https://img.shields.io/badge/License-CC--BY--SA--4.0-475569?style=flat-square)](LICENSE)
 [![Discussions](https://img.shields.io/badge/Discussions-open-475569?style=flat-square&logo=github&logoColor=white)](../../discussions)
+[![AxonOS Radar](https://img.shields.io/endpoint?url=https%3A%2F%2Faxonos-bci.github.io%2Faxonos-community-radar%2Fbadges%2FAxonOS-org%2Faxonos-rfcs.json&style=flat-square)](https://axonos-bci.github.io/axonos-community-radar/)
 
 [**Index**](#index-of-rfcs) &nbsp;·&nbsp; [**Process**](#process) &nbsp;·&nbsp; [**Reading order**](#reading-order-for-new-readers) &nbsp;·&nbsp; [**Stack**](#position-in-the-axonos-stack) &nbsp;·&nbsp; [**License**](#license)
 

@@ -19,7 +19,7 @@ references:
   - axonos-consent SPEC.md §9 — the publication gate
   - RFC 7009 — OAuth 2.0 Token Revocation (IETF, 2013)
   - D. D. Redell, "Naming and Protection in Extendable Operating Systems", PhD thesis, MIT, 1974 — revocable capabilities through an indirection
-  - "Zero After Withdrawal — the AxonOS Reference BCI", https://gist.github.com/AxonOS-BCI/b5cf55b5ce6a901bbeb0a34faaa1fd8a
+  - 'Zero After Withdrawal — the AxonOS Reference BCI, long read: https://gist.github.com/AxonOS-BCI/b5cf55b5ce6a901bbeb0a34faaa1fd8a'
 ---
 
 # RFC-0012: Consent withdrawal reaches every disclosure channel

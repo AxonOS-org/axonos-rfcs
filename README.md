@@ -8,7 +8,7 @@
 
 <br/>
 
-[![RFCs](https://img.shields.io/badge/RFCs-6-0a4a8f?style=flat-square)](rfcs/)
+[![RFCs](https://img.shields.io/badge/RFCs-11-0a4a8f?style=flat-square)](rfcs/)
 [![Standard](https://img.shields.io/badge/Standard-v1.0.0-0a4a8f?style=flat-square)](https://github.com/AxonOS-org/axonos-standard)
 [![Process](https://img.shields.io/badge/Process-active-0d7a5f?style=flat-square)](#process)
 [![License](https://img.shields.io/badge/License-CC--BY--SA--4.0-475569?style=flat-square)](LICENSE)
@@ -44,6 +44,8 @@ The format is adapted from the [Rust RFC process](https://github.com/rust-lang/r
 | [0007](rfcs/0007-swarm-real-time-contract.md) | Swarm Real-Time Contract | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | scheduling | 2026-06-04 |
 | [0008](rfcs/0008-deadline-closure-acquisition-chain.md) | Deadline Closure for the Acquisition Chain | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | kernel | 2026-07-29 |
 | [0009](rfcs/0009-bounded-disclosure-sealed-neural-data.md) | Bounded Disclosure of Sealed Neural Data | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | security | 2026-07-29 |
+| [0011](rfcs/0011-align-standard-section-19-with-shipped-record.md) | Align Standard Section 19 with the Shipped Intent-Observation Record | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | api | 2026-08-26 |
+| [0012](rfcs/0012-consent-withdrawal-reaches-every-disclosure-channel.md) | Consent Withdrawal Reaches Every Disclosure Channel | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | security | 2026-10-08 |
 
 ### Status legend
 
@@ -136,6 +138,7 @@ If you are reviewing for clinical or regulatory engagement:
 1. RFC-0003 (Validation Status Framework) — the evidence taxonomy
 2. RFC-0004 (Dual-Core Contract) — the partition and fault containment model
 3. RFC-0005 (Capability-Based Manifest) — the application isolation model
+4. RFC-0012 (Consent Withdrawal Reaches Every Disclosure Channel) — what "withdrawal is honoured" has to mean when there is more than one channel; the finding behind it is told in the long read [*Zero After Withdrawal*](https://gist.github.com/AxonOS-BCI/b5cf55b5ce6a901bbeb0a34faaa1fd8a)
 
 If you are an investor evaluating engineering rigour:
 

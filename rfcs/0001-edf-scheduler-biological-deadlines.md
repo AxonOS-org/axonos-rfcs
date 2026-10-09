@@ -6,7 +6,7 @@ track: scheduling
 authors:
   - Denis Yermakou <connect@axonos.org>
 created: 2026-04-25
-updated: 2026-04-25
+updated: 2026-10-09
 implementation:
   - axonos-kernel scheduler module (in development)
 references:
@@ -199,8 +199,10 @@ Strict cyclic schedule, no runtime preemption. Highest determinism.
 
 ## Validation evidence level
 
-- **L1** (instruction-count derived) — The 640.2 µs pipeline WCET is instruction-count derived from `rustc 1.75 --opt-level=3` for `thumbv7em-none-eabihf`, summed against the [Cortex-M4F instruction timing reference](https://developer.arm.com/documentation/ddi0439/b/Programmers-Model/Instruction-set-summary).
-- **L2** (runtime measured) — The 972 µs end-to-end WCRT and the 2.1 µs σ jitter are measured on STM32F407 over a 12-hour continuous run with BCI Competition IV Dataset 2a replayed via the ADS1299 test-signal mux. Sample population: 10.8 M epochs. Zero deadline misses.
+> **Correction, 2026-10-09.** This section graded an instruction-count derivation as L1 and a 12-hour run as L2. In the AxonOS Standard, L1 means a machine-checked proof and L2 a measurement with a published trace. The derivation is neither, and no trace of the 12-hour run exists, so the run's figures are withdrawn (axonos-standard 1.1.1, [`CLAIMS.md`](https://github.com/AxonOS-org/axonos-standard/blob/main/CLAIMS.md)). The bullets below are kept as corrected.
+
+- **Analytical** (instruction-count derived; formerly labelled L1) — The 640.2 µs pipeline WCET is instruction-count derived from `rustc 1.75 --opt-level=3` for `thumbv7em-none-eabihf`, summed against the [Cortex-M4F instruction timing reference](https://developer.arm.com/documentation/ddi0439/b/Programmers-Model/Instruction-set-summary).
+- **L2** (runtime measured) — **None.** Earlier text reported a 972 µs end-to-end WCRT and 2.1 µs σ jitter from a 12-hour run on STM32F407; no trace of that run exists, and both figures are withdrawn.
 - **L3** (independent oscilloscope-validated) — **Pending**, pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented (STM32H573 class part).
 
 ## References

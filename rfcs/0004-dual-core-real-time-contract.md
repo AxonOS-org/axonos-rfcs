@@ -6,7 +6,7 @@ track: scheduling
 authors:
   - Denis Yermakou <connect@axonos.org>
 created: 2026-04-25
-updated: 2026-04-25
+updated: 2026-10-09
 implementation:
   - axonos-kernel partition module (in development)
 references:
@@ -56,7 +56,7 @@ These clauses together define what "dual-core real-time" means in AxonOS. A futu
 
 **Falsification criterion.** Any single epoch where the pipeline does not produce a published intent event within the period boundary (4 ms for the current configuration). The DSP cycle counter is sampled at the start of each epoch and at intent-publish; the difference is logged.
 
-**Current evidence.** Measured WCRT 972 µs over 12 hours / 10.8 M epochs, zero deadline misses (L2). Independent oscilloscope validation pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented (L3).
+**Current evidence.** None published. *(Corrected 2026-10-09: earlier text cited a measured WCRT of 972 µs over 12 hours / 10.8 M epochs; no trace exists and the figure is withdrawn (axonos-standard 1.1.1, [`CLAIMS.md`](https://github.com/AxonOS-org/axonos-standard/blob/main/CLAIMS.md)).)* Independent oscilloscope validation pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented (L3).
 
 ### DC2 — IPC latency bound
 
@@ -66,7 +66,7 @@ These clauses together define what "dual-core real-time" means in AxonOS. A futu
 
 **Mechanism.** The IPC follows the protocol of RFC-0002. A producer's `seq.store(index + 1, Release)` becomes visible to the consumer's `seq.load(Acquire)` within the cache coherence latency of the hardware platform. On the reference platform, the M4F and A53 share an L2 cache; observed cross-core sync time is approximately 80 ns plus the memory-system latency.
 
-**Current evidence.** Sub-0.2 µs measured during 12-hour pipeline run (L2). Independent oscilloscope validation pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented (L3).
+**Current evidence.** None published. *(Corrected 2026-10-09: earlier text cited a sub-0.2 µs measurement from the 12-hour run; no trace exists and the figure is withdrawn.)* Independent oscilloscope validation pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented (L3).
 
 ### DC3 — Wake-up determinism
 
@@ -128,8 +128,8 @@ A future RFC on swarm real-time will extend this contract to multi-node deployme
 
 | Clause | What | Bound | Evidence Level |
 |:---|:---|:---|:---:|
-| DC1 | DSP WCET bound | 4 ms epoch, U ≤ 0.25 | L2 |
-| DC2 | IPC latency bound | ≤ 0.2 µs | L2 |
+| DC1 | DSP WCET bound | 4 ms epoch, U ≤ 0.25 | L2 required · none published |
+| DC2 | IPC latency bound | ≤ 0.2 µs | L2 required · none published |
 | DC3 | A53 wake-up determinism | ≤ 50 µs dispatch | L2 |
 | DC4 | Fault containment | A53 fault → DSP unaffected | L1 (config), L2/L3 pending |
 | DC5 | Graceful degradation | A53 stall → DSP safe-idle | L1 (design), L2 pending |

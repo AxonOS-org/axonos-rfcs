@@ -35,14 +35,14 @@ The format is adapted from the [Rust RFC process](https://github.com/rust-lang/r
 
 | # | Title | Status | Track | Updated |
 |:---:|:---|:---:|:---:|:---:|
-| [0001](rfcs/0001-edf-scheduler-biological-deadlines.md) | EDF Scheduler with Biological Deadlines | ![status-active](https://img.shields.io/badge/-active-success) | scheduling | 2026-04-25 |
-| [0002](rfcs/0002-zero-copy-ring-buffer.md) | Zero-Copy Ring Buffer for Signal Path | ![status-active](https://img.shields.io/badge/-active-success) | memory | 2026-04-25 |
-| [0003](rfcs/0003-validation-status-framework.md) | Validation Status Framework (L1/L2/L3) | ![status-active](https://img.shields.io/badge/-active-success) | process | 2026-04-25 |
-| [0004](rfcs/0004-dual-core-real-time-contract.md) | Dual-Core Real-Time Contract | ![status-active](https://img.shields.io/badge/-active-success) | scheduling | 2026-04-25 |
+| [0001](rfcs/0001-edf-scheduler-biological-deadlines.md) | EDF Scheduler with Biological Deadlines | ![status-active](https://img.shields.io/badge/-active-success) | scheduling | 2026-10-09 |
+| [0002](rfcs/0002-zero-copy-ring-buffer.md) | Zero-Copy Ring Buffer for Signal Path | ![status-active](https://img.shields.io/badge/-active-success) | memory | 2026-10-09 |
+| [0003](rfcs/0003-validation-status-framework.md) | Validation Status Framework (L1/L2/L3) | ![status-active](https://img.shields.io/badge/-active-success) | process | 2026-10-09 |
+| [0004](rfcs/0004-dual-core-real-time-contract.md) | Dual-Core Real-Time Contract | ![status-active](https://img.shields.io/badge/-active-success) | scheduling | 2026-10-09 |
 | [0005](rfcs/0005-capability-based-app-manifest.md) | Capability-Based Application Manifest | ![status-active](https://img.shields.io/badge/-active-success) | security | 2026-04-25 |
 | [0006](rfcs/0006-intent-wire-format-abi.md) | Intent Wire Format ABI | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | api | 2026-05-15 |
 | [0007](rfcs/0007-swarm-real-time-contract.md) | Swarm Real-Time Contract | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | scheduling | 2026-06-04 |
-| [0008](rfcs/0008-deadline-closure-acquisition-chain.md) | Deadline Closure for the Acquisition Chain | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | kernel | 2026-07-29 |
+| [0008](rfcs/0008-deadline-closure-acquisition-chain.md) | Deadline Closure for the Acquisition Chain | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | kernel | 2026-10-09 |
 | [0009](rfcs/0009-bounded-disclosure-sealed-neural-data.md) | Bounded Disclosure of Sealed Neural Data | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | security | 2026-07-29 |
 | [0011](rfcs/0011-align-standard-section-19-with-shipped-record.md) | Align Standard Section 19 with the Shipped Intent-Observation Record | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | api | 2026-08-26 |
 | [0012](rfcs/0012-consent-withdrawal-reaches-every-disclosure-channel.md) | Consent Withdrawal Reaches Every Disclosure Channel | ![status-draft](https://img.shields.io/badge/-draft-lightgrey) | security | 2026-10-08 |

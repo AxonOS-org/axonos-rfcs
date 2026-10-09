@@ -6,7 +6,7 @@ track: kernel
 authors:
   - Denis Yermakou <connect@axonos.org>
 created: 2026-07-29
-updated: 2026-08-01
+updated: 2026-10-09
 implementation:
   - axonos-hal — TimingBudget::close — v0.2.0 adopts the published figures; v0.1.1 deviations recorded in §9
   - axonos-supervisor — deadline-miss observability — v0.1.0
@@ -50,8 +50,11 @@ than presenting the implementation as conformant.
 
 ## Motivation
 
-AxonOS publishes a worst-case response time of 972 µs and jitter of 2.1 µs σ,
-6.5 µs at the 99.9th percentile. Figures of this kind ordinarily live in
+AxonOS published a worst-case response time of 972 µs and jitter of 2.1 µs σ,
+6.5 µs at the 99.9th percentile. *(Corrected 2026-10-09: no trace of the run
+behind these figures exists, and they are withdrawn (axonos-standard 1.1.1, [`CLAIMS.md`](https://github.com/AxonOS-org/axonos-standard/blob/main/CLAIMS.md)). Below they
+remain as the input parameters the vectors and the worked example were built
+on, not as measurements.)* Figures of this kind ordinarily live in
 documentation, where nothing checks them and where the day a pipeline stage is
 added they quietly stop being true.
 
@@ -160,7 +163,7 @@ standard deviation *σ*, the jitter-limited signal-to-noise ratio is
 SNR_jitter = −20 · log₁₀(2π f σ)                                          (3)
 ```
 
-At the canonical σ = 2.1 µs this gives 65.6 dB at 40 Hz and 57.6 dB at 100 Hz;
+At an illustrative σ = 2.1 µs (the withdrawn figure, kept as an input) this gives 65.6 dB at 40 Hz and 57.6 dB at 100 Hz;
 at the P99.9 figure of 6.5 µs, 55.7 dB and 47.8 dB respectively. The ADS1299 at
 250 SPS and gain 24 delivers on the order of 21 effective bits, and the
 electrode-side noise floor of a scalp recording is well above that. Sampling
@@ -271,7 +274,8 @@ insufficient, because it places the obligation on every future caller.
 
 An implementation claiming conformance MUST reproduce the following for the
 published task set (Σ *C_i* = 694.2 µs, RFC-0001) against the published ceiling
-*U_max* = 0.25, with the measured end-to-end WCRT *R* = 972 µs:
+*U_max* = 0.25, with the end-to-end WCRT parameter *R* = 972 µs (an input of the
+vectors; the measurement it was taken from is withdrawn, 2026-10-09):
 
 | *f_s* | *T* | *U* = Σ*C_i*/*T* | *R* ≤ *T* | Required outcome |
 |:--|--:|--:|:--|:--|

@@ -6,7 +6,7 @@ track: process
 authors:
   - Denis Yermakou <connect@axonos.org>
 created: 2026-04-25
-updated: 2026-04-25
+updated: 2026-10-09
 implementation:
   - axonos.org technology page
   - axonos-rfcs (this repository, all RFCs)
@@ -17,6 +17,16 @@ references:
 ---
 
 # RFC-0003: Validation Status Framework (L1/L2/L3)
+
+> **Note, 2026-10-09 — two taxonomies under one set of labels.** This RFC
+> defines L1 as *instruction-count derived* and L3 as *oscilloscope-validated*.
+> The AxonOS Standard (`STANDARD.md` Section 22, normative) uses the same labels
+> differently: L1 is a *machine-checked proof* over the admissible inputs and L3
+> an *independent reproduction*. A figure graded L1 here is therefore an
+> analytical derivation, not a proof, and it may not be presented as L1 under
+> the Standard. Where the two disagree, the Standard governs. The timing figures
+> this disagreement let through as "proven" are withdrawn (axonos-standard
+> 1.1.1, `CLAIMS.md`); reconciling the taxonomies is left to a superseding RFC.
 
 ## Summary
 

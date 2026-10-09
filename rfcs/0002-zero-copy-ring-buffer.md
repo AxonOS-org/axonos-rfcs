@@ -6,7 +6,7 @@ track: memory
 authors:
   - Denis Yermakou <connect@axonos.org>
 created: 2026-04-25
-updated: 2026-04-25
+updated: 2026-10-09
 implementation:
   - axonos-kernel signal path module (in development)
 references:
@@ -41,7 +41,7 @@ The memory region is structured as a ring of `N` slots. The DMA fills slot `head
 
 Synchronisation is achieved via a per-slot sequence number. The producer (DMA completion handler) writes a slot's sequence number with `Release` ordering to publish that slot. The consumer (classifier task) reads the sequence number with `Acquire` ordering before reading the slot's payload. This pattern guarantees that any payload write that happened-before the sequence-number publish is visible to any thread that has observed the published sequence number — across cores, across cache hierarchies, on weak memory models.
 
-There is no lock. There is no kernel mediation. The hot path is: DMA completion interrupt → sequence number store → classifier task wake → sequence number load → slot read. End to end, this measures sub-0.2 µs cross-core IPC delivery.
+There is no lock. There is no kernel mediation. The hot path is: DMA completion interrupt → sequence number store → classifier task wake → sequence number load → slot read. The design target for this path is under 0.2 µs of cross-core delivery; it has not been measured (see *Validation evidence level*).
 
 If the buffer is full when the producer wants to write, the producer signals overrun. AxonOS rejects buffer overrun as a fatal pipeline error rather than dropping samples — see "Backpressure" in the reference-level explanation below.
 
@@ -261,8 +261,10 @@ MPSC or MPMC ring with CAS-based reservation.
 
 ## Validation evidence level
 
-- **L1** (instruction-count derived) — The IPC delivery path is instruction-count derived at ≤ 0.2 µs on Cortex-M4F at 168 MHz, comprising one acquire load, one release store, and the slot read.
-- **L2** (runtime measured) — The SPSC protocol is measured at sub-0.2 µs cross-task delivery as part of the 12-hour pipeline runtime measurement (RFC-0001 § Validation evidence level).
+> **Correction, 2026-10-09.** An instruction-count derivation is not L1 in the AxonOS Standard, and the 12-hour run cited for L2 has no trace; its figure is withdrawn (axonos-standard 1.1.1, [`CLAIMS.md`](https://github.com/AxonOS-org/axonos-standard/blob/main/CLAIMS.md)).
+
+- **Analytical** (instruction-count derived; formerly labelled L1) — The IPC delivery path is instruction-count derived at ≤ 0.2 µs on Cortex-M4F at 168 MHz, comprising one acquire load, one release store, and the slot read.
+- **L2** (runtime measured) — **None.** Earlier text cited a sub-0.2 µs measurement from the 12-hour pipeline run; no trace exists and the figure is withdrawn. The `axonos-spsc` Kani harnesses (K1–K5) prove the protocol's round trip, termination and FIFO order for a four-slot ring; they establish no time.
 - **L3** (independent oscilloscope-validated) — **Pending**. GPIO-instrumented IPC delivery measurement on STM32H573 fixture is pending an instrumented evaluation-board fixture, which is not yet procured; no date is given because one would be invented.
 
 ## References
